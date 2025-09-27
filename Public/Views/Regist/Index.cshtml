@@ -1,0 +1,45 @@
+﻿
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="//cdnjs.cloudflare.com/ajax/libs/jszip/2.4.0/jszip.min.js"></script>
+
+@(Html.Kendo().Grid<OpenDayTelerik.Models.View_Regist_Full>()
+    .Name("grid") // Tên của grid
+    .Columns(columns =>
+    {
+          columns.Bound(p => p.USER_ID).Title("User ID");
+        columns.Bound(p => p.FULLNAME).Title("Full Name");
+        columns.Bound(p => p.CLASS_ID).Title("Class ID");
+        columns.Bound(p => p.CLASSNAME).Title("Class Name");
+        columns.Bound(p => p.GROUPCLASS).Title("Khung giờ");
+          columns.Bound(p => p.TIMESTART).Title("Thời gian bắt đầu");
+        columns.Bound(p => p.TIMEEND).Title("Thời gian kết thúc");
+        columns.Bound(p => p.TYPE).Title("Nhóm");
+        columns.Bound(p => p.ROOM).Title("Phòng");
+      
+      
+
+
+    })
+   .ToolBar(toolbar =>
+    {
+        toolbar.Excel();
+    })
+    .Excel(excel => excel
+        .FileName("Regist_Full_Export.xlsx") // Tên file xuất
+        .Filterable(true) // Cho phép lọc
+        .ProxyURL(Url.Action("Excel_Export_Save", "Regist")) // Đường dẫn tới action xử lý lưu file
+    )
+    .Pageable()
+    .Sortable()
+    .Groupable()
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .Read(read => read.Action("GetData_Regist_Full", "Regist")) // Action trả về dữ liệu cho grid
+    )
+)
+
+

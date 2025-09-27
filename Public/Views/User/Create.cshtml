@@ -1,0 +1,190 @@
+﻿@model OpenDayTelerik.Models.USER_MODEL
+
+@{
+    ViewBag.Title = "Đăng ký tài khoản mới";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewBag.Title - Fulbright Open Day</title>
+    <link href="https://cdn.kendostatic.com/2023.1.117/styles/kendo.default-ocean-blue.min.css" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/bootstrap.min.css")" rel="stylesheet" type="text/css" />
+    @*<link href="@Url.Content("~/Content/Site2.css")" rel="stylesheet" type="text/css" />*@
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.kendostatic.com/2023.1.117/js/jszip.min.js"></script>
+    <script src="https://cdn.kendostatic.com/2023.1.117/js/kendo.all.min.js"></script>
+    <script src="https://cdn.kendostatic.com/2023.1.117/js/kendo.aspnetmvc.min.js"></script>
+    <script src="@Url.Content("~/Scripts/bootstrap.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/html2canvas.min.js")"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet" />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <link href="~/Content/index.css" rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            content: ["./**/*.html"],
+            theme: {
+                extend: {
+                    colors: {
+                        neutral: "#E1E1DE",
+                        highlight: "#CEECF5",
+                        secondary: "#FBAD22",
+                        primary: "#242B68",
+                        darkneutral: "#61646B",
+                    },
+                    gridTemplateRows: {
+                        15: "repeat(15, minmax(0, 1fr))",
+                        14: "repeat(14, minmax(0, 1fr))",
+                    },
+                    gridRow: {
+                        "span-11": "span 11 / span 11",
+                        "span-14": "span 14 / span 14",
+                    },
+                    fontFamily: {
+                        Halyard: ["Halyard", "EB Garamond", "serif"],
+                    },
+                },
+            },
+        };
+    </script>
+</head>
+<body>
+    <div class="px-3">
+        <div class="h-18 w-full" style="padding-top:10px; padding-bottom:10px">
+            <img src="~/Content/Image/logo.png" width="150" alt="Fulbright's Open Day" />
+        </div>
+
+        <h2 class="text-center" style="padding-top: 30px; font-weight: bold; font-size:large; color: #242B68;">ĐĂNG KÝ TÀI KHOẢN MỚI</h2>
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal" style="max-width: 600px; margin: auto;">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                @* Các trường nhập liệu *@
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model, "BẠN LÀ", htmlAttributes: new { @class = "col-form-label" })
+
+                    @(Html.Kendo().ComboBox()
+                    .Name("STUDENT")
+                      .Filter("none") // Ngăn không cho nhập liệu
+                            .Suggest(false) // Tắt gợi ý nhập liệu
+                            .Placeholder("Chọn đối tượng ...")
+                    .BindTo(new string[] { "Phụ huynh", "Học sinh" })
+                    .HtmlAttributes(new { })
+                    )
+
+                    @Html.ValidationMessageFor(model => model.STUDENT, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group" id="fullnameField">
+                    @Html.LabelFor(model => model.FULLNAME, "HỌ VÀ TÊN", htmlAttributes: new { @class = "col-form-label" })
+                    @Html.EditorFor(model => model.FULLNAME, new { htmlAttributes = new { @class = "form-control", placeholder = "Nhập họ và tên" } })
+                    @Html.ValidationMessageFor(model => model.FULLNAME, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group" id="emailField">
+                    @Html.LabelFor(model => model.EMAIL, "ĐỊA CHỈ THƯ ĐIỆN TỬ", htmlAttributes: new { @class = "col-form-label" })
+                    @Html.EditorFor(model => model.EMAIL, new { htmlAttributes = new { @class = "form-control", placeholder = "Nhập địa chỉ email" } })
+                    @Html.ValidationMessageFor(model => model.EMAIL, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group" id="phoneField">
+                    @Html.LabelFor(model => model.PHONE, "SỐ ĐIỆN THOẠI", htmlAttributes: new { @class = "col-form-label" })
+                    @Html.EditorFor(model => model.PHONE, new { htmlAttributes = new { @class = "form-control", placeholder = "Nhập số điện thoại" } })
+                    @Html.ValidationMessageFor(model => model.PHONE, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group" id="schoolField">
+                    @Html.LabelFor(model => model.SCHOOL, "TRƯỜNG ỨNG VIÊN ĐANG THEO HỌC", htmlAttributes: new { @class = "col-form-label" })
+                    @Html.EditorFor(model => model.SCHOOL, new { htmlAttributes = new { @class = "form-control", placeholder = "Nhập tên trường" } })
+                    @Html.ValidationMessageFor(model => model.SCHOOL, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group" id="classField">
+                    @Html.LabelFor(model => model.CLASS, "LỚP", htmlAttributes: new { @class = "col-form-label" })
+                    @(Html.Kendo().ComboBox()
+                         .Name("CLASS")
+                         .Filter("none") // Ngăn không cho nhập liệu
+                            .Suggest(false) // Tắt gợi ý nhập liệu
+                            .Placeholder("Chọn lớp học...")
+                         .BindTo(new string[] { "Lớp 9", "Lớp 10", "Lớp 11", "Lớp 12", "Lớp 13", "Gap Year", "Sinh viên đại học", "Khác..." })
+                         .HtmlAttributes(new { })
+                    )
+                    @Html.ValidationMessageFor(model => model.CLASS, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group" id="cityField">
+                    @Html.LabelFor(model => model.CITY, "THÀNH PHỐ", htmlAttributes: new { @class = "col-form-label" })
+                    @(Html.Kendo().AutoComplete()
+                        .Name("CITY")
+                        .Suggest(true)
+                        .Filter("startswith")
+                        .BindTo(new string[]  { "Hà Nội", "Hồ Chí Minh", "Đà Nẵng", "Hải Phòng", "Cần Thơ", "An Giang", "Bà Rịa - Vũng Tàu",
+                                "Bắc Giang", "Bắc Kạn", "Bạc Liêu", "Bắc Ninh", "Bến Tre", "Bình Định", "Bình Dương",
+                                "Bình Phước", "Bình Thuận", "Cà Mau", "Cao Bằng", "Đắk Lắk", "Đắk Nông", "Điện Biên",
+                                "Đồng Nai", "Đồng Tháp", "Gia Lai", "Hà Giang", "Hà Nam", "Hà Tĩnh", "Hải Dương", "Hậu Giang",
+                                "Hòa Bình", "Hưng Yên", "Khánh Hòa", "Kiên Giang", "Kon Tum", "Lai Châu", "Lâm Đồng", "Lạng Sơn",
+                                "Lào Cai", "Long An", "Nam Định", "Nghệ An", "Ninh Bình", "Ninh Thuận", "Phú Thọ", "Phú Yên",
+                                "Quảng Bình", "Quảng Nam", "Quảng Ngãi", "Quảng Ninh", "Quảng Trị", "Sóc Trăng", "Sơn La",
+                                "Tây Ninh", "Thái Bình", "Thái Nguyên", "Thanh Hóa", "Thừa Thiên Huế", "Tiền Giang", "Trà Vinh",
+                                "Tuyên Quang", "Vĩnh Long", "Vĩnh Phúc", "Yên Bái" })
+                        .HtmlAttributes(new { style = "height:40px", placeholder = "Gõ tên tỉnh thành" })
+                    )
+                    @Html.ValidationMessageFor(model => model.CITY, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    <label style="text-align:justify">
+                        <input type="checkbox" id="agreeCheckbox">
+                        Bằng việc nhấn gửi biểu mẫu này, tôi đồng ý để Trường Đại học Fulbright Việt Nam lưu giữ thông tin cá nhân của tôi theo Chính Sách Quyền Riêng Tư liên quan đến việc xử lý dữ liệu cá nhân của người dùng, phù hợp với Nghị Định 13/2023/NĐ-CP của Chính Phủ Việt Nam về Bảo Vệ Dữ Liệu Cá Nhân.
+                    </label>
+                </div>
+                <div class="form-group text-center">
+                    <input type="submit" id="submitButton" disabled value="ĐĂNG KÝ" class="btn text-white font-bold px-4 py-2 text-xl" style="margin-top: 20px;background-color:#242B68" />
+                </div>
+            </div>
+        }
+    <script>
+        // Lấy checkbox và nút submit
+        const agreeCheckbox = document.getElementById("agreeCheckbox");
+        const submitButton = document.getElementById("submitButton");
+
+        // Thêm sự kiện để khi click checkbox thì nút submit sẽ được kích hoạt
+        agreeCheckbox.addEventListener("change", function () {
+            submitButton.disabled = !this.checked;
+        });
+
+        
+            $(document).ready(function() {
+            var comboBox = $("#CLASS").data("kendoComboBox");
+            comboBox.input.on("keydown", function(e) {
+                e.preventDefault(); // Ngăn không cho nhập liệu
+                    });
+            });
+        
+            $(document).ready(function() {
+            var comboBox = $("#STUDENT").data("kendoComboBox");
+            comboBox.input.on("keydown", function(e) {
+                e.preventDefault(); // Ngăn không cho nhập liệu
+                    });
+            });
+    
+        </script>
+        <footer class="footer text-center d-flex align-items-center">
+            <div class="container-fluid">
+                <p class="text-muted mb-0">Copyright © @DateTime.Now.Year Vpro Software.</p>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

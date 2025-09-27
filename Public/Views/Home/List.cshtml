@@ -1,0 +1,72 @@
+﻿@model IEnumerable<OpenDayTelerik.Models.USER>
+
+@{
+    ViewBag.Title = "List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>List</h2>
+
+<p>
+    @Html.ActionLink("Thêm người dùng", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>@Html.DisplayNameFor(model => model.ID)</th>
+        <th>@Html.DisplayNameFor(model => model.FULLNAME)</th>
+        <th>@Html.DisplayNameFor(model => model.EMAIL)</th>
+        <th>@Html.DisplayNameFor(model => model.PHONE)</th>
+        <th>@Html.DisplayNameFor(model => model.STUDENT)</th>
+        <th>@Html.DisplayNameFor(model => model.SCHOOL)</th>
+        <th>@Html.DisplayNameFor(model => model.CLASS)</th>
+        <th>@Html.DisplayNameFor(model => model.CITY)</th>
+     
+        <th>QR Code</th> <!-- Thêm cột QRCode -->
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+    <tr>
+        <td>@Html.DisplayFor(modelItem => item.ID)</td> <!-- Hiển thị ID -->
+        <td>@Html.DisplayFor(modelItem => item.FULLNAME)</td>
+        <td>@Html.DisplayFor(modelItem => item.EMAIL)</td>
+        <td>@Html.DisplayFor(modelItem => item.PHONE)</td>
+        <td>@Html.DisplayFor(modelItem => item.STUDENT)</td>
+        <td>@Html.DisplayFor(modelItem => item.SCHOOL)</td>
+        <td>@Html.DisplayFor(modelItem => item.CLASS)</td>
+        <td>@Html.DisplayFor(modelItem => item.CITY)</td>
+
+    <td>
+        
+            @(Html.Kendo().QRCode()
+            .Name("qrcode-" + item.ID) // Thay đổi ở đây
+            .Value("openday.cloud/home/index/" + item.ID.ToString()) // Chuyển đổi ID thành chuỗi
+            .Size(200)
+            .Border("#000", 1))
+        
+        |
+        <button onclick="downloadQRCode(@item.ID)">Download QR Code</button>
+    </td>
+</tr>
+    }
+
+</table>
+
+@section Scripts {
+    <script>
+        function downloadQRCode(id) {
+            var qrCodeElement = $("#qrcode-" + id).data("kendoQRCode").wrapper[0];
+
+            html2canvas(qrCodeElement).then(function (canvas) {
+                var link = document.createElement('a');
+                link.download = id + '.png';
+                link.href = canvas.toDataURL("image/png");
+                link.click();
+            }).catch(function (error) {
+                console.error("Error generating canvas:", error);
+            });
+        }
+
+    </script>
+}

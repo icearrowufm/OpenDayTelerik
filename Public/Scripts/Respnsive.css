@@ -1,0 +1,41 @@
+﻿#div1, #div2 {
+    flex: 1; /* Mỗi div sẽ chiếm một phần bằng nhau */
+}
+
+/* Khi thiết bị có độ rộng từ 768px trở lên (máy tính bảng, máy tính để bàn) */
+@media (min-width: 768px) {
+    #div1, #div2 {
+        flex: 1; /* Mỗi div sẽ chiếm một cột */
+    }
+}
+
+/* Khi thiết bị có độ rộng nhỏ hơn 768px (thiết bị di động) */
+@media (max-width: 767px) {
+    #div1, #div2 {
+        flex: 100%; /* Mỗi div sẽ chiếm toàn bộ chiều rộng */
+    }
+}
+
+@media (max-width: 768px) {
+    #qr-reader {
+        width: 100%;
+    }
+
+    .center-text {
+        text-align: center;
+    }
+
+ 
+   
+}
+@media (min-width: 1024px) {
+    .center-text {
+        text-align: center;
+    }
+
+    #qr-reader {
+        width: 80%;
+        margin: 0 auto;
+    }
+
+}

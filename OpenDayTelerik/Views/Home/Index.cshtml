@@ -1,0 +1,534 @@
+﻿@model IEnumerable<OpenDayTelerik.Models.CLASS>
+@{
+    ViewBag.Title = "Lịch trình";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap"
+          rel="stylesheet" />
+    <link rel="stylesheet" href="~/Content/index.css" />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script>
+        tailwind.config = {
+            content: ["./**/*.html"],
+            theme: {
+                extend: {
+                    colors: {
+                        neutral: "#E1E1DE",
+                        highlight: "#CEECF5",
+                        secondary: "#FBAD22",
+                        primary: "#242B68",
+                        darkneutral: "#61646B",
+                    },
+                    gridTemplateRows: {
+                        15: "repeat(15, minmax(0, 1fr))",
+                        14: "repeat(14, minmax(0, 1fr))",
+                    },
+                    gridRow: {
+                        "span-11": "span 11 / span 11",
+                        "span-14": "span 14 / span 14",
+                    },
+                    fontFamily: {
+                        Halyard: ["Halyard", "EB Garamond", "serif"],
+                    },
+                },
+            },
+        };
+    </script>
+    <style>
+        .andanh {
+            display: none;
+        }
+
+        .user-info {
+            position: fixed; /* Cố định vị trí */
+            bottom: 20px; /* Khoảng cách từ phía dưới */
+            right: 20px; /* Khoảng cách từ bên phải */
+            background-color: #fff; /* Nền trắng */
+            border: 1px solid #ccc; /* Đường viền xám */
+            border-radius: 4px; /* Bo góc */
+            padding: 10px 16px; /* Padding để tạo khoảng cách nội dung */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Bóng đổ nhẹ */
+            z-index: 1000; /* Đảm bảo hiển thị trên các thành phần khác */
+            font-size: 16px; /* Kích thước chữ */
+            color: #333; /* Màu chữ */
+            display: flex; /* Sử dụng flexbox để sắp xếp các phần tử trên cùng một dòng */
+            align-items: center; /* Canh giữa các phần tử theo chiều dọc */
+        }
+
+            .user-info img {
+                margin-left: 8px; /* Thêm khoảng cách giữa văn bản và hình ảnh */
+            }
+
+        .popup1 {
+            display: none; /* Ẩn popup theo mặc định */
+            position: fixed; /* Vị trí cố định */
+            left: 0;
+            top: 0;
+            width: 100%; /* Toàn bộ chiều rộng */
+            height: 100%; /* Toàn bộ chiều cao */
+            background-color: rgba(0, 0, 0, 0.5); /* Màu nền mờ */
+            justify-content: center; /* Canh giữa nội dung */
+            align-items: center; /* Canh giữa theo chiều dọc */
+        }
+
+        .popup-content1 {
+            background-color: white; /* Màu nền cho nội dung popup */
+            padding: 20px;
+            border-radius: 5px; /* Bo góc */
+            text-align: center; /* Canh giữa văn bản */
+        }
+
+        .close1 {
+            cursor: pointer; /* Hiển thị con trỏ chuột */
+            float: right; /* Đặt nút đóng ở góc phải */
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close2 {
+            cursor: pointer; /* Hiển thị con trỏ chuột */
+            float: right; /* Đặt nút đóng ở góc phải */
+            font-size: 15px;
+            font-weight: bold;
+            color: red;
+        }
+
+        #qrcode {
+            border: 10px solid #ffffff; /* Viền trắng dày 10px */
+            padding: 10px; /* Khoảng cách giữa QR code và viền */
+            display: inline-block; /* Đảm bảo viền bao quanh đúng kích thước của QR code */
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="px-3">
+        <div class="h-18 w-full" style="padding-top:10px; padding-bottom:10px">
+            <img src="~/Content/Image/logo.png" width="150" style="width:150px;" alt="Fulbright's Open Day" />
+        </div>
+        <div class="w-full h-25 mb-4 border border-black rounded-md bg-container" style="background-color:#001a6e">
+            <center> <img src="~/Content/Image/bg.png" width="640" height="150" alt="Fulbright's Open Day"/></center>
+        </div>
+        <!-- paragraph -->
+        <article class="flex flex-col justify-center items-center mb-6">
+            <h1 class="text-2xl font-bold text-center mb-3 text-primary font-garamond">
+                Chào mừng bạn đến tham dự<br />
+                Fulbright's Open Day!
+            </h1>
+            <p class="justify-content-center justify-center">
+                Chúc mừng bạn đã checkin thành công. Dưới đây là thời gian biểu các hoạt động và lớp học sẽ diễn ra trong chương trình ngày hôm nay. Vui lòng đăng ký các Lớp học thử và Hội thảo dưới đây.<br />
+                Lưu ý:<br />
+                - Lớp học thử chỉ dành cho ứng viên. Phụ huynh có thể tham gia Hội thảo và các hoạt động triển lãm, tư vấn. <br />
+                - Mỗi ứng viên được tham gia tối đa 2 lớp học thử. <br />
+                - Vui lòng lựa chọn Hủy lịch nếu bạn không tham gia được lớp học/ hội thảo.
+            </p>
+        </article>
+        <!-- schedule board -->
+        <div id="schedule-board"
+             class="font-medium text-center w-full flex flex-col">
+            <div class="grid grid-cols-4 grid-rows-15 mb-3 gap-4">
+                <div class="text-primary">Thời gian</div>
+                <div class="text-primary">Hoạt động</div>
+                <div class="text-primary">Lớp học thử</div>
+                <div class="text-primary">Hội thảo</div>
+                <div id="schedule-time"
+                     class="relative grid grid-cols-1 col-start-1 grid-rows-14 row-span-14 text-center w-full"></div>
+                <div id="" class="grid gap-x-2 grid-cols-3 col-span-3 col-start-2 grid-rows-14 row-span-14">
+                    @foreach (var i in Model)
+                    {
+                        if (Session[i.COLSTART.ToString() + i.GROUPCLASS.ToString()].ToString() == "unavailable")
+                        {
+                            <div class="@Session[i.COLSTART.ToString()+i.GROUPCLASS.ToString()] schedule-item col-start-@i.COLSTART row-span-@i.ROWSPAN row-start-@i.ROWSTAR z-30 opacity-90 rounded-xl font-semibold text-sm flex justify-center items-center my-2 shadow">@Html.Raw(i.CLASSNAME)</div>
+
+                        }
+                        else
+                        {
+                            <div id='@i.COLSTART.ToString()@i.GROUPCLASS.ToString()' class="@Session[i.COLSTART.ToString()+i.GROUPCLASS.ToString()] schedule-item col-start-@i.COLSTART row-span-@i.ROWSPAN row-start-@i.ROWSTAR z-30 opacity-90 rounded-xl font-semibold text-sm flex justify-center items-center my-2 shadow">@Html.Raw(i.CLASSNAME)</div>
+                        }
+                    }
+
+                </div>
+            </div>
+        </div>
+        <!-- download button -->
+        <div class="flex justify-center py-4 cursor-pointer">
+            <a href="/Home/Download">
+                <div class="w-fit py-4 px-6 border border-primary text-primary font-bold text-xl flex justify-center">
+                    Xem lịch trình của tôi
+                </div>
+            </a>
+        </div>
+    </div>
+    <!-- Popup -->
+
+    <div id="popup" class="popup fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div id="popup-content" class="popup-content px-6 py-4 rounded-lg shadow-lg w-4/5 h-fit bg-neutral">
+
+        </div>
+    </div>
+    <script>
+        // Lấy các phần tử
+        var buttons = document.querySelectorAll('.schedule-item');
+        var popup = document.getElementById('popup');
+        var confirm = document.getElementById('btn-confirm');
+        var back = document.getElementById('btn-back');
+        var popupContent = document.getElementById('popup-content');
+
+        buttons.forEach(function (button) {
+            button.onclick = function () {
+                var buttonId = this.id;
+                var isActive = this.classList.contains("active"); // Kiểm tra class active
+                var isUnavailable = this.classList.contains("unavailable");
+                if (isUnavailable) { }
+                else if (isActive) {
+                    // Gửi yêu cầu tới server để lấy dữ liệu từ model tương ứng với id của button
+                    fetch(`/Home/Get_ClassDataById?id=${buttonId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            // Điền dữ liệu từ Model vào popup
+                            popupContent.innerHTML = `
+                                    <form id="popup-form" action="/Home/deleteRegist" method="post">
+                                        <h1 class="text-center text-2xl font-bold text-darkneutral">${data.TYPE}</h1>
+                                        <h1 class="text-center text-2xl font-bold text-darkneutral">${data.CLASSNAME}</h1>
+                                        <p>Vui lòng đến lớp trước 10' để có chỗ ngồi tốt nhất và sử dụng QR của mình để tham gia</p>
+                                        <div class="my-4">
+                                            <p><b>Thời gian</b>: <span class="time-start">${data.TIMESTART}</span> - <span class="time-end">${data.TIMEEND}</span></p>
+                                            <p><b>Phòng học</b>: <span class="item-room">${data.ROOM}</span></p>
+
+                                            <p><b>Mô tả</b>: <span class="item-info">${data.INFO}</span></p>
+                                        </div>
+                                        <div class="flex justify-center items-center gap-4">
+                                            <button type="button" class="button-back bg-primary text-white rounded-md px-2 py-1">Đóng</button>
+                                            <button type="submit" id="btn-cancel" class="button-cancel bg-primary text-white rounded-md px-2 py-1">Hủy lịch</button>
+                                        </div>
+                                        <input type="hidden" name="TIMESTART" value="${data.TIMESTART}" />
+                                        <input type="hidden" name="CLASS_ID" value="${data.ID}" />
+                                        <input type="hidden" name="COLSTART" value="${data.COLSTART}" />
+                                        <input type="hidden" name="CLASSNAME" value="${data.CLASSNAME}" />
+                                        <input type="hidden" name="USER_ID" value="${DataView['user']}" />
+                                    </form>
+                                `;
+
+                            // Hiển thị popup và overlay
+                            $("#popup").removeClass("hidden");
+                            $("#overlay").show();
+
+                            // Xử lý nút back
+                            document.querySelector('.button-back').onclick = function (event) {
+                                event.preventDefault(); // Ngăn chặn hành động mặc định
+                                $("#popup").addClass("hidden"); // Ẩn popup
+                                $("#overlay").hide(); // Ẩn overlay
+                            };
+                        })
+                        .catch(error => console.log('Error fetching data:', error));
+
+                } else {
+                    // Gửi yêu cầu tới server để lấy dữ liệu từ model tương ứng với id của button
+                    fetch(`/Home/GetModelData?id=${buttonId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            // Điền dữ liệu từ Model vào popup
+                            popupContent.innerHTML = `
+                                                        <form id="popup-form" action="/Home/getRegist" method="post">
+                                                            <h1 class="text-center text-2xl font-bold text-darkneutral">${data.TYPE}</h1>
+                                                            <h1 class="item-text text-center text-2xl font-bold text-dark">
+                                                               <select id="classComboBox" name="classComboBox" placeholder="Chọn lớp...">
+                                                                    <option value="">Chọn lớp...</option>
+                                                                </select>
+                                                            </h1>
+                                                            <div class="my-4">
+                                                                <p><b>Thời gian</b>: <span class="time-start"></span> - <span class="time-end"></span></p>
+                                                                <p><b>Phòng học</b>: <span class="item-room"></span></p>
+
+                                                                <p><b>Mô tả</b>: <span class="item-info"></span></p>
+                                                            </div>
+                                                            <div class="flex justify-center items-center gap-4">
+                                                                <button id="btn-back" type="button" class="button-back bg-primary text-white rounded-md px-2 py-1">Đóng</button>
+
+                                                                <button type="submit" id="btn-confirm" class="button-submit bg-primary text-white rounded-md px-2 py-1">Đăng ký</button>
+                                                            </div>
+                                                            <input type="hidden" name="TIMESTART" value="${data.TIMESTART}" />
+                                                            <input type="hidden" name="ID" value="${data.ID}" />
+                                                            <input type="hidden" name="ID_class" class="item-id-class" value="" />
+                                                            <input type="hidden" name="COLSTART" value="${data.COLSTART}" />
+
+                                                        </form>
+                                                    `;
+
+                            loadComboBoxData(data.TIMESTART, data.COLSTART);
+
+                            // Hiển thị popup và overlay
+                            $("#popup").removeClass("hidden");
+                            $("#overlay").show();
+
+                            // Xử lý nút back
+                            document.getElementById("btn-back").onclick = function () {
+                                $("#popup").addClass("hidden");  // Ẩn popup
+                                $("#overlay").hide();             // Ẩn
+                            };
+
+                        })
+                        .catch(error => console.log('Error fetching data:', error));
+                }
+            };
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Xử lý sự kiện click cho nút Confirm
+            document.getElementById('popup').addEventListener('click', function (event) {
+                if (event.target && event.target.id === 'btn-confirm') {
+                    event.preventDefault(); // Ngăn chặn hành động mặc định của form submit
+
+                    // Lấy dữ liệu từ form
+                    var formData = new FormData(document.getElementById('popup-form'));
+
+                    // Gửi dữ liệu tới server
+                    fetch('/Home/getRegist', {
+                        method: 'POST',
+                        body: formData
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            // Kiểm tra phản hồi từ server và cập nhật lại nội dung popup
+                            if (data.NOTICE) {
+                                // Chỉnh sửa nội dung popup khi nhận được kết quả đăng ký từ server
+                                document.getElementById('popup-content').innerHTML = `
+                                                <h1 class="text-center text-2xl font-bold text-darkneutral">${data.TYPE}</h1>
+                                                <h1 class="item-text text-center text-2xl font-bold text-dark">${data.CLASSNAME}</h1>
+                                                <div class="my-4">
+                                                    <center><p class="font-bold" style="color:red">${data.NOTICE}</p></center>
+                                                    <p>Vui lòng đến lớp hoặc hội thảo trước 10p để có chỗ ngồi tốt nhất và sử dụng QR của mình để tham gia.<br/>
+                                                        Hãy hỏi bất kỳ ai mặc áo Fulbright nếu bạn cần hỗ trợ tìm phòng.<br/>
+                                                        - Sử dụng thang máy hoặc thang cuốn để lên tầng 2.<br/>
+                                                        - Sử dụng thang máy để lên tầng 5.</p>
+                                                </div>
+                                                <div class="my-4">
+                                                    <p><b>Thời gian</b>: <span class="time-start">${data.TIMESTART}</span> - <span class="time-end">${data.TIMEEND}</span></p>
+                                                    <p><b>Phòng học</b>: <span>${data.ROOM}</span></p>
+                                                    <p><b>Mô tả</b>: <span>${data.INFO}</span></p>
+                                                </div>
+                                                <div class="flex justify-center items-center gap-4">
+                                                    <button type="button" class="button-back bg-primary text-white rounded-md px-2 py-1">Đóng</button>
+                                                </div>
+                                            `;
+                                document.querySelector('.button-back').onclick = function () {
+                                    $("#popup").addClass("hidden");  // Ẩn popup
+                                    $("#overlay").hide();             // Ẩn overlay
+                                    window.location.href = '/'; // Chuyển hướng về trang mặc định
+
+                                };
+                            }
+                        })
+                        .catch(error => console.log('Error submitting form:', error));
+                }
+
+            }); // Đóng sự kiện click cho popup
+        }); // Đóng sự kiện DOMContentLoaded
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Xử lý sự kiện click cho popup
+            document.getElementById('popup').addEventListener('click', function (event) {
+                // Kiểm tra xem nút nào được nhấn
+                if (event.target && event.target.id === 'btn-cancel') {
+                    event.preventDefault(); // Ngăn chặn hành động mặc định của form submit
+
+                    // Lấy dữ liệu từ form
+                    var formData = new FormData(document.getElementById('popup-form'));
+
+                    // Gửi dữ liệu tới server
+                    fetch('/Home/deleteRegist', {
+                        method: 'POST',
+                        body: formData
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            // Kiểm tra phản hồi từ server và cập nhật lại nội dung popup
+                            if (data.NOTICE) {
+                                // Chỉnh sửa nội dung popup khi nhận được kết quả đăng ký từ server
+                                document.getElementById('popup-content').innerHTML = `
+                                                <div class="my-4">
+                                                    <p class="font-bold">${data.NOTICE}</p>
+                                                </div>
+                                                <div class="flex justify-center items-center gap-4">
+                                                    <button type="button" class="button-back bg-primary text-white rounded-md px-2 py-1">Đóng</button>
+                                                </div>
+                                            `;
+
+                                // Xử lý nút back
+                                document.querySelector('.button-back').onclick = function () {
+                                    $("#popup").addClass("hidden");
+                                    $("#overlay").hide();
+                                    window.location.href = '/'; // Chuyển hướng về trang mặc định
+                                };
+                            }
+                        })
+                        .catch(error => console.log('Error submitting form:', error));
+                }
+            });
+
+
+        });
+
+
+
+        async function loadComboBoxData(timestart, id) {
+            try {
+                const data = await fetchClassData(timestart, id);
+                const comboBox = document.getElementById("classComboBox");
+                const classContainer = comboBox.parentNode;
+
+                if (data.length === 1) {
+                    const selectedClass = data[0];
+                    displaySingleClass(selectedClass, comboBox, classContainer);
+                    updateClassDetails(selectedClass);
+                } else {
+                    populateComboBox(data, comboBox);
+                    comboBox.addEventListener("change", handleComboBoxChange);
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        // Hàm gửi yêu cầu tới server để lấy dữ liệu lớp học
+        async function fetchClassData(timestart, id) {
+            const response = await fetch(`/Home/GetClassData?id=${id}&timestart=${encodeURIComponent(timestart)}`);
+            if (!response.ok) throw new Error('Failed to fetch class data');
+            return response.json();
+        }
+
+        // Hiển thị thông tin khi chỉ có một lớp duy nhất
+        function displaySingleClass(selectedClass, comboBox, classContainer) {
+            const classNameDisplay = document.createElement("span");
+            classNameDisplay.textContent = selectedClass.CLASSNAME;
+            classNameDisplay.className = "class-name-display";
+            classContainer.replaceChild(classNameDisplay, comboBox);
+        }
+
+        // Hàm cập nhật chi tiết của lớp đã chọn
+        function updateClassDetails(data) {
+            document.querySelector(".time-start").textContent = data.TIMESTART;
+            document.querySelector(".time-end").textContent = data.TIMEEND;
+            document.querySelector(".item-room").textContent = data.ROOM;
+
+            document.querySelector(".item-info").textContent = data.INFO;
+            document.querySelector(".item-id-class").value = data.ID;
+
+        }
+
+        // Hàm điền dữ liệu vào ComboBox khi có nhiều lớp
+        function populateComboBox(data, comboBox) {
+            comboBox.innerHTML = '<option value="">Chọn lớp...</option>';
+            data.forEach(item => {
+                const option = document.createElement("option");
+                option.value = item.ID;
+                option.textContent = item.PAX_RES < item.PAX ? item.CLASSNAME : `${item.CLASSNAME} (Hết chỗ)`;
+                comboBox.appendChild(option);
+            });
+        }
+
+        // Xử lý sự kiện thay đổi ComboBox
+        async function handleComboBoxChange() {
+            const selectedId = this.value;
+            try {
+                const selectedData = await fetch(`/Home/GetClassDataById?id=${selectedId}`).then(res => res.json());
+                updateClassDetails(selectedData);
+                toggleConfirmButton(selectedData.PAX_RES, selectedData.PAX);
+            } catch (error) {
+                console.error('Error fetching selected class data:', error);
+            }
+        }
+
+        // Hàm kiểm tra số lượng và ẩn nút confirm nếu cần
+        function toggleConfirmButton(paxRes, pax) {
+            const btnConfirm = document.getElementById("btn-confirm");
+            if (btnConfirm) {
+                btnConfirm.style.display = (paxRes >= pax) ? 'none' : 'block';
+            }
+        }
+
+
+
+        function showPopup() {
+            // Hiển thị popup và overlay
+            $("#popup1").removeClass("hidden");
+            $("#overlay").show();
+        }
+
+        function closePopup() {
+            $("#popup1").addClass("hidden"); // Ẩn popup
+            $("#overlay").hide(); // Ẩn overlay
+        }
+        function logoff() {
+            window.location.href = '/User/logoff'; // Chuyển hướng về trang mặc định
+        }
+        // Thêm sự kiện nhấn phím để đóng popup
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "Escape") {
+                closePopup();
+            }
+        });
+    </script>
+
+    <div style="text-align:right; margin:0 50px 50px 0">
+        @if (Session["user"] != null)
+        {
+            <div class="user-info" onclick="showPopup()">
+                Xin chào, @Session["user"] | <img src="~/Content/Image/qr-scan.png" />
+            </div>
+        }
+    </div>
+    <div id="popup1" class="popup fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div id="popup-content1" class="popup-content bg-neutral rounded-lg shadow-lg w-4/5 md:w-1/2 p-6 text-center">
+            <span class="close1 cursor-pointer text-2xl" onclick="closePopup()">  &times;</span>
+
+            <p>User: @Session["user"]</p>
+            <p>Full Name: @Session["fullname"]</p>
+            <p>Loại tài khoản: @Session["roles"]</p>
+            <center> <div id="qrcode" class="mx-auto my-4 p-4"></div> </center>
+            <p>Sử dụng mã này để điểm danh</p>
+            <br />
+            <span class="close2 cursor-pointer text-2xl" onclick="logoff()">Đăng xuất</span>
+        </div>
+    </div>
+
+    <script>
+            // Kiểm tra nếu Session["user"] không null
+            var userId = '@Session["user"]';
+            if (userId) {
+                // Tạo QR code
+                var qrcode = new QRCode(document.getElementById("qrcode"), {
+                    text: "https://openday.cloud/home/signin/" + userId,
+                    width: 200,
+                    height: 200,
+                    colorDark: "#000000",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.H // Mức độ khôi phục lỗi
+                });
+            } else {
+                document.getElementById('qrcode').innerHTML = "<p>Không có thông tin để tạo QR code.</p>";
+            }
+    </script>
+    <footer class="footer text-center d-flex align-items-center">
+        <div class="container-fluid">
+            <p class="text-muted mb-0">Copyright © @DateTime.Now.Year Vpro Software.</p>
+        </div>
+    </footer>
+    <!-- Script -->
+    <script type="module" src="~/js/index.js"></script>
+</body>
+</html>

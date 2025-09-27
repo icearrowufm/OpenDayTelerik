@@ -1,0 +1,37 @@
+﻿@model IEnumerable<OpenDayTelerik.Models.View_Checkin_Full>
+@if (Model != null && Model.Any())
+{
+    <p>Tổng số: @Model.Count() / @Model.First().PAX</p>
+}
+else
+{
+    <p>Chưa có người tham dự</p>
+}
+@Html.ActionLink("Quay lại", "Pivot_Class", "Regist", new { @class = "btn btn-primary" })
+@(Html.Kendo().Grid(Model)
+    .Name("grid") // Tên của grid
+    .Columns(columns =>
+    {
+    columns.Bound(p => p.CLASS_ID).Title("Class ID");
+    columns.Bound(p => p.CLASSNAME).Title("Class Name");
+    columns.Bound(p => p.GROUPCLASS).Title("Khung giờ");
+    columns.Bound(p => p.TYPE).Title("Nhóm");
+    columns.Bound(p => p.TIMESTART).Title("Thời gian bắt đầu");
+    columns.Bound(p => p.TIMEEND).Title("Thời gian kết thúc");
+    columns.Bound(p => p.ID).Title("User ID");
+    columns.Bound(p => p.FULLNAME).Title("Họ tên");
+    columns.Bound(p => p.STUDENT).Title("Đối tượng");
+    columns.Bound(p => p.CLASSNAME).Title("Lớp");
+    columns.Bound(p => p.SCHOOL).Title("Trường");
+    columns.Bound(p => p.PHONE).Title("SĐT");
+    columns.Bound(p => p.EMAIL).Title("Email");
+    columns.Bound(p => p.CITY).Title("Thành phố");
+})
+.Groupable()
+.Sortable() // Thêm chức năng sắp xếp
+
+.Groupable() // Thêm chức năng nhóm
+
+)
+
+@Html.ActionLink("Quay lại", "Pivot_Class", "Regist", new { @class = "btn btn-primary" })

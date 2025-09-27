@@ -1,0 +1,107 @@
+﻿
+@font-face {
+    font-family: 'Halyard';
+    src: url('/Content/fonnts.com-Halyard_Display_Regular.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    font-family: 'Halyard', 'EB Garamond', sans-serif;
+}
+
+h1 {
+    font-family: 'EB Garamond', sans-serif;
+}
+
+.collapsible {
+    overflow: hidden;
+    transition: max-height 0.4s ease-in;
+    max-height: 0;
+}
+
+    .collapsible.expanded {
+        max-height: 500px;
+        transition: max-height 0.5s ease-out;
+    }
+
+.required {
+    color: red;
+    margin-left: 4px;
+}
+
+.border-warning {
+    border-color: red !important;
+}
+
+.error-message {
+    display: none;
+}
+
+.input-field.border-warning + .error-message {
+    display: block;
+}
+
+#schedule-time {
+    position: relative;
+
+}
+
+.active {
+    background-color: #FBAD22;
+    color: #242B68;
+}
+
+.available {
+    background-color: #CEECF5;
+    color: #242B68;
+}
+
+.unavailable {
+    background-color: #b9b9b9;
+    color: #4b5563;
+}
+
+
+#classComboBox {
+    width: 100%; /* Đảm bảo chiếm đủ chiều rộng của container */
+    max-width: 300px; /* Giới hạn chiều rộng tối đa */
+    padding: 8px; /* Thêm khoảng đệm để dễ bấm hơn */
+    font-size: 16px; /* Giảm kích thước chữ để phù hợp với thiết bị di động */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* Đảm bảo padding không làm tăng kích thước tổng thể */
+}
+
+/* Đảm bảo ComboBox hiển thị đẹp trên các thiết bị nhỏ */
+@media (max-width: 450px) {
+    #classComboBox {
+        max-width: 230px; /* Thu nhỏ hơn nữa trên màn hình nhỏ */
+        font-size: 15px; /* Giảm kích thước chữ để dễ đọc hơn */
+        padding: 6px;
+    }
+}
+
+.bg-container {
+    height:150px;
+    border-radius: 0.25rem;
+   
+    background-size: cover; /* Đảm bảo ảnh bao phủ toàn bộ div */
+    background-position: top;
+    background-repeat: no-repeat;
+    background-color: #001a6e;
+}
+
+/* Thay đổi chiều cao cho thiết bị nhỏ hơn */
+@media (max-width: 768px) {
+    .bg-container {
+        height: 150px; /* Chiều cao ngắn hơn cho tablet và điện thoại */
+    }
+}
+
+/* Thay đổi chiều cao cho thiết bị rất nhỏ (mobile) */
+@media (max-width: 480px) {
+    .bg-container {
+        height: 100px; /* Chiều cao ngắn hơn cho màn hình mobile nhỏ */
+    }
+}

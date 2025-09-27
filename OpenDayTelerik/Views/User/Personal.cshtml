@@ -1,0 +1,108 @@
+﻿
+@{
+    ViewBag.Title = "Trang cá nhân";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewBag.Title - Fulbright Open Day</title>
+    <link href="https://cdn.kendostatic.com/2023.1.117/styles/kendo.default-ocean-blue.min.css" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/bootstrap.min.css")" rel="stylesheet" type="text/css" />
+    @*<link href="@Url.Content("~/Content/Site2.css")" rel="stylesheet" type="text/css" />*@
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.kendostatic.com/2023.1.117/js/jszip.min.js"></script>
+    <script src="https://cdn.kendostatic.com/2023.1.117/js/kendo.all.min.js"></script>
+    <script src="https://cdn.kendostatic.com/2023.1.117/js/kendo.aspnetmvc.min.js"></script>
+    <script src="@Url.Content("~/Scripts/bootstrap.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/html2canvas.min.js")"></script>
+    @*<script src="https://cdn.tailwindcss.com"></script>*@
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet" />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <link href="~/Content/index.css" rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            content: ["./**/*.html"],
+            theme: {
+                extend: {
+                    colors: {
+                        neutral: "#E1E1DE",
+                        highlight: "#CEECF5",
+                        secondary: "#FBAD22",
+                        primary: "#242B68",
+                        darkneutral: "#61646B",
+                    },
+                    gridTemplateRows: {
+                        15: "repeat(15, minmax(0, 1fr))",
+                        14: "repeat(14, minmax(0, 1fr))",
+                    },
+                    gridRow: {
+                        "span-11": "span 11 / span 11",
+                        "span-14": "span 14 / span 14",
+                    },
+                    fontFamily: {
+                        Halyard: ["Halyard", "EB Garamond", "serif"],
+                    },
+                },
+            },
+        };
+    </script>
+</head>
+<body>
+    <div class="px-3">
+        <div class="h-18 w-full" style="padding-top:10px; padding-bottom:10px">
+            <img src="~/Content/Image/logo.png" width="150" alt="Fulbright's Open Day" />
+        </div>
+     
+        <!-- paragraph -->
+        <article class="flex flex-col justify-center items-center mb-6">
+            <h1 class="font-xl font-bold text-center mb-3 font-garamond" style="color: #242B68">
+                Chào mừng bạn đến tham dự <br>
+                Fulbright's Open Day! <br>
+                HỌ TÊN: @Session["fullname"] <br>
+                USER ID: @Session["user"]
+            </h1>
+           
+        </article>
+    </div>
+   <div class="text-center justify-center">
+        <div>
+            <p>Sử dụng QR code này để đăng nhập và điểm danh. Sau đó Nhấn vào "Đăng ký hoạt động sự kiện" bên dưới mã QR để lựa chọn Lớp học thử và Hội thảo.</p>
+            @(Html.Kendo().QRCode()
+                  .Name("qrcode") // Thay đổi ở đây
+                  .Value("https://openday.cloud/home/signin/" + Session["user"]) // Chuyển đổi ID thành chuỗi
+                  .Size(400)
+                  .Color("#242B68")
+                .Border("#242B68", 2)) <br />
+        <a href="https://openday.cloud/home/signin/@Session["user"]">https://openday.cloud/home/signin/@Session["user"]</a>
+        </div>
+        
+        <button type="button" onclick="downloadQRCode('@Session["user"]')" class="btn text-white font-bold px-4 py-2 text-xl" style="color:white; background-color:#242B68">Download QR Code</button> <br />
+       <br />
+       <a href="/">
+           <button type="button" class="btn bg-secondaryW text-white font-bold px-4 py-2 text-xl" style="color:white; background-color:#FBAD22">ĐĂNG KÝ HOẠT ĐỘNG SỰ KIỆN</button> <br /><br />
+       </a>
+    </div>
+    <script>
+        function downloadQRCode(id) {
+            var qrCodeElement = $("#qrcode").data("kendoQRCode").wrapper[0];
+
+            html2canvas(qrCodeElement).then(function (canvas) {
+                var link = document.createElement('a');
+                link.download = id+'.png';
+                link.href = canvas.toDataURL("image/png");
+                link.click();
+            }).catch(function (error) {
+                console.error("Error generating canvas:", error);
+            });
+        }
+
+    </script>
+</body>
+</html>

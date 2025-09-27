@@ -1,0 +1,106 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewBag.Title - Fulbright's Open Day</title>
+    <link href="https://cdn.kendostatic.com/2023.1.117/styles/kendo.default-ocean-blue.min.css" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/bootstrap.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/Site2.css")" rel="stylesheet" type="text/css" />
+    <script src="~/Scripts/jquery-3.7.1.js"></script>
+    <script src="https://cdn.kendostatic.com/2023.1.117/js/jszip.min.js"></script>
+    <script src="https://cdn.kendostatic.com/2023.1.117/js/kendo.all.min.js"></script>
+    <script src="https://cdn.kendostatic.com/2023.1.117/js/kendo.aspnetmvc.min.js"></script>
+    <script src="@Url.Content("~/Scripts/bootstrap.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/html2canvas.min.js")"></script>
+    @*<script src="https://cdn.tailwindcss.com"></script>*@
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet" />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <link href="~/Scripts/Respnsive.css" rel="stylesheet" />
+    <script src="~/Scripts/html2canvas.min.js"></script>
+
+    <link href="~/Content/index.css" rel="stylesheet" />
+    <script>
+        bootstrap.config = {
+            content: ["./**/*.html"],
+            theme: {
+                extend: {
+                    colors: {
+                        neutral: "#E1E1DE",
+                        highlight: "#CEECF5",
+                        secondary: "#FBAD22",
+                        primary: "#242B68",
+                        darkneutral: "#61646B",
+                    },
+                    gridTemplateRows: {
+                        15: "repeat(15, minmax(0, 1fr))",
+                        14: "repeat(14, minmax(0, 1fr))",
+                    },
+                    gridRow: {
+                        "span-11": "span 11 / span 11",
+                        "span-14": "span 14 / span 14",
+                    },
+                },
+            },
+        };
+    </script>
+
+</head>
+<body class="k-content">
+    <nav class="navbar navbar-dark bg-primary">
+        <div class="container-fluid d-flex justify-content-between align-items-center p-2">
+            <h1 class="navbar-brand">Fulbright's Open Day Dashboard</h1>
+            <button id="configure" class="k-rpanel-toggle k-button k-button-md k-rounded-md k-icon-button k-button-solid-primary btn-toggle">
+                <span class="k-button-icon k-icon k-i-menu"></span>
+            </button>
+        </div>
+    </nav>
+
+
+    <div id="responsive-panel" class="navbar navbar-dark bg-light">
+        @(Html.Kendo().Menu()
+            .Name("Menu")
+            .HtmlAttributes(new { style = "width:100%" })
+            .Items(items =>
+            {
+                items.Add().Text("USER").Action("Index", "User");
+                items.Add().Text("ALL").Action("Index", "Regist");
+                items.Add().Text("PIVOT").Action("Pivot_Class", "Regist");
+            })
+        )
+    </div>
+
+    <main class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                @RenderBody()
+            </div>
+        </div>
+    </main>
+
+    @RenderSection("Scripts", required: false)
+   
+    <footer class="footer text-center d-flex align-items-center">
+        <div class="container-fluid">
+            <p class="text-muted mb-0">Copyright © @DateTime.Now.Year Vpro Software.</p>
+        </div>
+    </footer>
+
+    <script>
+        $(document).ready(function () {
+            $("#responsive-panel").kendoResponsivePanel({
+                breakpoint: 768,
+                autoClose: false,
+                orientation: "top"
+            });
+        });
+
+        function onclick(e) {
+            $("#responsive-panel").getKendoResponsivePanel().toggle();
+        }
+    </script>
+</body>
+
+</html>

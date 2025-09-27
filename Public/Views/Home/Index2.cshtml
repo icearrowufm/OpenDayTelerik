@@ -1,0 +1,588 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fulbright's Open Day</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet" />
+    <!-- Custom CSS -->
+    <style>
+        /* Nội dung của ~/Content/index.css */
+        body {
+            font-family: 'EB Garamond', serif;
+        }
+        /* Các kiểu CSS tùy chỉnh khác nếu cần */
+    </style>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+            crossorigin="anonymous"></script>
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            content: ["./**/*.html"],
+            theme: {
+                extend: {
+                    colors: {
+                        neutral: "#E1E1DE",
+                        highlight: "#CEECF5",
+                        secondary: "#FBAD22",
+                        primary: "#242B68",
+                        darkneutral: "#61646B",
+                        dark: "#000000", /* Thêm màu dark nếu cần */
+                    },
+                    gridTemplateRows: {
+                        15: "repeat(15, minmax(0, 1fr))",
+                        14: "repeat(14, minmax(0, 1fr))",
+                    },
+                    gridRow: {
+                        "span-11": "span 11 / span 11",
+                        "span-14": "span 14 / span 14",
+                    },
+                    fontFamily: {
+                        garamond: ["Garamond", "serif"],
+                    },
+                },
+            },
+        };
+    </script>
+</head>
+<body>
+    <div class="px-3">
+        <div class="h-18 w-full" style="padding-top:10px; padding-bottom:10px">
+            <img src="~/Content/Image/logo.png" width="150" alt="Logo của Fulbright" />
+        </div>
+        <div class="w-full h-20 mb-4 border border-black rounded-md" style="padding-top:10px">
+            <!-- Có thể thêm nội dung hoặc giữ trống -->
+        </div>
+        <!-- Bài Viết Chào Mừng -->
+        <article class="flex flex-col justify-center items-center mb-6">
+            <h1 class="text-2xl font-bold text-center mb-3 text-primary font-garamond">
+                <span>Chào mừng bạn đến tham dự</span>
+                <span>Fulbright's Open Day!</span>
+            </h1>
+            <p>
+                Chúc mừng bạn đã check-in thành công. Dưới đây là thời gian biểu các
+                hoạt động và lớp học sẽ diễn ra trong chương trình ngày hôm nay. Vui
+                lòng đến khu vực tư vấn để được giới thiệu về các ngành học, hoặc chọn
+                ngay các lớp học thử ngay bảng biểu phía dưới
+            </p>
+        </article>
+        <!-- Bảng Lịch Trình -->
+        <div id="schedule-board" class="font-medium text-center w-full flex flex-col">
+            <div class="grid grid-cols-4 grid-rows-15 mb-3 gap-4">
+                <div class="text-primary">Thời gian</div>
+                <div class="text-primary">Hoạt động</div>
+                <div class="text-primary">Lớp học thử</div>
+                <div class="text-primary">Info Session</div>
+                <div id="schedule-time"
+                     class="relative grid grid-cols-1 col-start-1 grid-rows-14 row-span-14 text-center w-full"></div>
+                <div id="schedule-item"
+                     class="grid gap-x-2 grid-cols-3 col-span-3 col-start-2 grid-rows-14 row-span-14"></div>
+            </div>
+        </div>
+        <!-- Nút Tải Lịch Trình -->
+        <div class="flex justify-center py-4 cursor-pointer">
+            <div class="w-fit py-4 px-6 border border-primary text-primary font-bold text-xl flex justify-center">
+                Tải lịch trình về máy
+            </div>
+        </div>
+    </div>
+    <!-- Containers cho Popup -->
+    <div id="popup-container" class="hidden"></div>
+
+    <!-- Popup Components (Ẩn đi ban đầu) -->
+    <!-- info.html -->
+    <div id="info-popup"
+         class="popup fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="popup-content px-6 py-4 rounded-lg shadow-lg w-2/3 h-fit bg-neutral">
+            <h1 class="text-center text-2xl font-bold text-darkneutral">Lớp học thử</h1>
+            <h1 class="item-text text-center text-2xl font-bold text-dark"></h1>
+            <div class="my-4">
+                <p><b>Thời gian</b>: <span class="time-start"></span> - <span class="time-end"></span></p>
+                <p><b>Phòng học</b>: CR502</p>
+                <p><b>Số lượng</b>: 50 pax</p>
+            </div>
+            <div class="">
+                <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Laboriosam, earum consectetur corporis optio iusto magnam quis dicta at officia.</p>
+            </div>
+            <div class="flex justify-center items-center gap-4">
+                <button class="button-back bg-white text-primary rounded-md px-2 py-1">Quay lại</button>
+                <button class="button-submit bg-primary text-white rounded-md px-2 py-1">Đăng ký học</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- select.html -->
+    <div id="select-popup"
+         class="popup fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="popup-content px-6 py-4 rounded-lg shadow-lg w-2/3 h-fit bg-neutral">
+            <h1 class="text-center text-2xl font-bold text-darkneutral">Chọn Loại Đăng Ký</h1>
+            <div class="flex flex-col items-center mt-4">
+                <div class="select-view w-full mb-4">
+                    <input type="text" id="select1-input" required class="w-full px-3 py-2 border focus:outline-none" placeholder="Chọn tùy chọn..." />
+                    <div class="focus-line bg-neutral h-1 mt-1"></div>
+                    <div class="select-dropdown hidden">
+                        <!-- Options sẽ được thêm bởi JavaScript -->
+                    </div>
+                    <p class="text-red-500 hidden">Trường này là bắt buộc.</p>
+                </div>
+                <div class="select-view w-full mb-4">
+                    <input type="text" id="select2-input" required class="w-full px-3 py-2 border focus:outline-none" placeholder="Chọn tùy chọn..." />
+                    <div class="focus-line bg-neutral h-1 mt-1"></div>
+                    <div class="select-dropdown hidden">
+                        <!-- Options sẽ được thêm bởi JavaScript -->
+                    </div>
+                    <p class="text-red-500 hidden">Trường này là bắt buộc.</p>
+                </div>
+                <button id="close-popup" class="mt-4 px-8 py-2 w-fit text-white rounded-md bg-secondary text-primary font-semibold">
+                    Tiếp theo
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- submit.html -->
+    <div id="submit-popup"
+         class="popup fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="popup-content px-6 py-4 rounded-lg shadow-lg w-2/3 h-fit bg-neutral">
+            <h1 class="text-center text-2xl font-bold text-darkneutral">Lớp học thử</h1>
+            <h1 class="item-text text-center text-2xl font-bold text-dark"></h1>
+            <div class="my-4">
+                <p class="font-bold">Bạn đã đăng ký lớp học thành công</p>
+                <p>Vui lòng đến lớp trước 10' để có chỗ ngồi tốt nhất và sử dụng QR của mình để tham gia</p>
+            </div>
+            <div class="my-4">
+                <p><b>Thời gian</b>: <span class="time-start"></span> - <span class="time-end"></span></p>
+                <p><b>Phòng học</b>: CR502</p>
+            </div>
+
+            <div class="flex justify-center items-center gap-4">
+                <button class="button-map bg-white text-primary rounded-md px-2 py-1">Xem sơ đồ</button>
+                <button class="button-back bg-primary text-white rounded-md px-2 py-1">Đóng</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script -->
+    <script>
+        // Data.js nội dung
+        const times = [
+            "9:00",
+            "9:30",
+            "10:00",
+            "10:30",
+            "11:00",
+            "11:30",
+            "12:00",
+            "12:30",
+            "13:00",
+            "13:30",
+            "14:00",
+            "14:30",
+            "15:00",
+            "15:30",
+        ];
+
+        const select1 = ["Option 1", "Option 2", "Option 3"];
+        const select2 = ["Option A", "Option B", "Option C"];
+
+        const items = [
+            {
+                colStart: 2,
+                rowStart: 1,
+                rowSpan: 3,
+                text: "Social Studies Literature",
+                type: "available",
+                timeStart: "9:00",
+                timeEnd: "10:00",
+            },
+            {
+                colStart: 2,
+                rowStart: 4,
+                rowSpan: 3,
+                text: "Psychology Art & Media Economics History Business Int Sciences Engineering",
+                type: "available",
+                timeStart: "10:30",
+                timeEnd: "11:30",
+            },
+            {
+                colStart: 2,
+                rowStart: 9,
+                rowSpan: 3,
+                text: "Social Studies Applied Math Vietnam Studies Computer Science Int Sciences Engineering",
+                type: "available",
+                timeStart: "13:00",
+                timeEnd: "14:00",
+            },
+            {
+                colStart: 2,
+                rowStart: 12,
+                rowSpan: 3,
+                text: "Psychology Art & Media Economics",
+                type: "available",
+                timeStart: "14:30",
+                timeEnd: "15:30",
+            },
+            {
+                colStart: 3,
+                rowStart: 1,
+                rowSpan: 3,
+                text: "Mô hình GD Khai phóng",
+                type: "available",
+                timeStart: "9:00",
+                timeEnd: "10:00",
+            },
+            {
+                colStart: 3,
+                rowStart: 4,
+                rowSpan: 3,
+                text: "Tuyển sinh, Học bổng",
+                type: "available",
+                timeStart: "10:30",
+                timeEnd: "11:30",
+            },
+            {
+                colStart: 3,
+                rowStart: 12,
+                rowSpan: 3,
+                text: "Chiến lược hoàn thiện hồ sơ",
+                type: "available",
+                timeStart: "14:30",
+                timeEnd: "15:30",
+            },
+        ];
+
+        // icon.js nội dung
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.replace(); // Thay thế các thẻ <i> có data-lucide thành các icon SVG
+        });
+
+        // register.js nội dung
+        $(document).ready(function () {
+            // Append options to #select1
+            select1.forEach((option) => {
+                const $div = $("<div></div>", {
+                    class: "options py-2 px-2 hover:bg-neutral cursor-pointer",
+                    text: option,
+                });
+                $("#select1").append($div);
+            });
+
+            // Append options to #select2
+            select2.forEach((option) => {
+                const $div = $("<div></div>", {
+                    class: "options py-2 px-2 hover:bg-neutral cursor-pointer",
+                    text: option,
+                });
+                $("#select2").append($div);
+            });
+
+            // Add click event to .select-view
+            $(".select-view").on("click", function () {
+                const $selectDropdown = $(this).next(".select-dropdown");
+                $selectDropdown.toggleClass("expanded");
+                $(this).find(".focus-line").toggleClass("bg-secondary");
+            });
+
+            // Add click event to .options
+            $(document).on("click", ".options", function () {
+                const selectedText = $(this).text();
+                const $selectView = $(this)
+                    .closest(".select-dropdown")
+                    .prev(".select-view");
+                $selectView.find("input").val(selectedText);
+                $(this).closest(".select-dropdown").removeClass("expanded");
+                $(this)
+                    .closest(".select-dropdown")
+                    .next(".text-red-500")
+                    .addClass("hidden"); // Hide error message when an option is selected
+                $selectView
+                    .find(".focus-line")
+                    .removeClass("bg-secondary bg-red-500")
+                    .addClass("bg-neutral");
+            });
+
+            // Add focus and blur events to inputs
+            $("input")
+                .on("focus", function () {
+                    $(this).next(".focus-line").addClass("bg-secondary");
+                })
+                .on("blur", function () {
+                    $(this).next(".focus-line").removeClass("bg-secondary");
+                });
+
+         
+
+            // Add blur and change events to select inputs
+            $("#select1-input, #select2-input").on("blur change", function () {
+                const inputValue = $(this).val().toLowerCase();
+                const selectId =
+                    $(this).attr("id") === "select1-input" ? "select1" : "select2";
+                const isValid = (selectId === "select1" ? select1 : select2).some(
+                    (option) => option.toLowerCase() === inputValue
+                );
+
+                if (!isValid) {
+                    $(this)
+                        .closest(".select-view")
+                        .nextAll(".text-red-500")
+                        .removeClass("hidden");
+                    $(this)
+                        .closest(".select-view")
+                        .find(".focus-line")
+                        .removeClass("bg-neutral")
+                        .addClass("bg-red-500");
+                } else {
+                    $(this)
+                        .closest(".select-view")
+                        .nextAll(".text-red-500")
+                        .addClass("hidden");
+                    $(this)
+                        .closest(".select-view")
+                        .find(".focus-line")
+                        .removeClass("bg-red-500")
+                        .addClass("bg-neutral");
+                }
+
+                // Hide dropdown when input loses focus
+                const $selectDropdown = $(this)
+                    .closest(".select-view")
+                    .next(".select-dropdown");
+                $selectDropdown.removeClass("expanded");
+                $(this)
+                    .closest(".select-view")
+                    .find(".focus-line")
+                    .removeClass("bg-secondary");
+            });
+
+            // Add blur and focus events to select elements
+            const selectElements = document.querySelectorAll("select");
+
+            selectElements.forEach((selectElement) => {
+                selectElement.addEventListener("blur", () => {
+                    if (selectElement.value) {
+                        selectElement.classList.remove("bg-red-500");
+                        selectElement.classList.add("bg-neutral");
+                    } else {
+                        selectElement.classList.remove("bg-neutral");
+                        selectElement.classList.add("bg-red-500");
+                    }
+                });
+
+                selectElement.addEventListener("change", () => {
+                    if (selectElement.value) {
+                        selectElement.classList.remove("bg-red-500");
+                        selectElement.classList.add("bg-neutral");
+                    } else {
+                        selectElement.classList.remove("bg-neutral");
+                        selectElement.classList.add("bg-red-500");
+                    }
+                });
+            });
+        });
+
+        // schedule.js nội dung
+        $(document).ready(function () {
+            let $gridContainer = $("#schedule-time");
+            let $scheduleBoard = $("#schedule-board");
+            let $scheduleItem = $("#schedule-item");
+
+            // Schedule time
+            const renderScheduleTime = (widthClass) => {
+                times.forEach(function (time) {
+                    const $timeDiv = $("<div></div>", {
+                        class:
+                            "col-start-1 relative after:content-[''] after:absolute after:border-b after:h-1 flex justify-center items-center after:border-gray-200 after:bottom-0 z-20 " +
+                            widthClass,
+                        text: time,
+                    });
+                    $gridContainer.append($timeDiv);
+                });
+            };
+
+            const addScheduleTime = () => {
+                let scheduleBoardWidth;
+                if ($(window).width() < 500) {
+                    scheduleBoardWidth = $scheduleBoard.width();
+                } else {
+                    scheduleBoardWidth = ($scheduleBoard.width() * 27) / 32;
+                }
+                const widthTemplate =
+                    $(window).width() < 500
+                        ? `after:left-0 after:w-[${scheduleBoardWidth}px]`
+                        : `after:left-1/3 after:w-[${scheduleBoardWidth}px]`;
+
+                $gridContainer.empty();
+
+                renderScheduleTime(widthTemplate);
+            };
+
+            // Schedule item
+            const createScheduleItem = (props) => {
+                let $item;
+                if (props.type === "available") {
+                    $item = $("<div></div>", {
+                        class: `available schedule-item col-start-${props.colStart} row-span-${props.rowSpan} row-start-${props.rowStart} z-30 opacity-60 rounded-xl font-semibold text-sm flex justify-center items-center my-2 cursor-pointer`,
+                        text: props.text,
+                        "data-time-start": props.timeStart,
+                        "data-time-end": props.timeEnd,
+                    });
+                } else if (props.type === "activate") {
+                    $item = $("<div></div>", {
+                        class: `activate schedule-item col-start-${props.colStart} z-30 opacity-60 rounded-xl font-semibold flex justify-center items-center text-xs my-2 cursor-pointer`,
+                        text: props.text,
+                        "data-time-start": props.timeStart,
+                        "data-time-end": props.timeEnd,
+                    });
+                } else {
+                    $item = $("<div></div>", {
+                        class: `unavailable schedule-item col-start-${props.colStart} z-30 opacity-60 rounded-xl font-semibold flex justify-center items-center text-xs my-2 cursor-pointer`,
+                        text: props.text,
+                        "data-time-start": props.timeStart,
+                        "data-time-end": props.timeEnd,
+                    });
+                }
+
+                $item.on("click", function () {
+                    const timeStart = $(this).data("time-start");
+                    const timeEnd = $(this).data("time-end");
+                    const text = $(this).text();
+
+                    $("#info-popup .item-text").text(text);
+                    $("#info-popup .time-start").text(timeStart);
+                    $("#info-popup .time-end").text(timeEnd);
+
+                    $("#popup-container").html($("#info-popup").html()).fadeIn();
+                    $("#info-popup").addClass("hidden");
+                });
+
+                return $item;
+            };
+
+            const addScheduleItems = () => {
+                items.forEach((item) => {
+                    $scheduleItem.append(createScheduleItem(item));
+                });
+            };
+
+            const createLiveTimeBar = () => {
+                const $scheduleTimeDiv = $("#schedule-time");
+                let scheduleWidth = $scheduleBoard.width();
+                // Create the live time bar if it doesn't exist
+                let $liveTimeBar = $("#live-time-bar");
+                if ($liveTimeBar.length === 0) {
+                    $liveTimeBar = $("<div>", {
+                        id: "live-time-bar",
+                        class:
+                            "absolute h-1 bg-secondary z-10 " + `w-[${scheduleWidth}px]`,
+                    });
+                    $scheduleTimeDiv.append($liveTimeBar);
+                }
+
+                const updateLiveTimeBar = () => {
+                    const now = new Date();
+                    const startTime = new Date();
+                    startTime.setHours(8, 45, 0); // 8:45 AM
+                    const endTime = new Date();
+                    endTime.setHours(15, 45, 0); // 3:45 PM
+
+                    if (now >= startTime && now <= endTime) {
+                        const totalMinutes = (endTime - startTime) / 60000; // Total minutes in the schedule
+                        const elapsedMinutes = (now - startTime) / 60000; // Minutes elapsed since start time
+                        const percentage = (elapsedMinutes / totalMinutes) * 100;
+
+                        $liveTimeBar.css("top", `${percentage}%`);
+                        $liveTimeBar.show();
+                    } else {
+                        $liveTimeBar.hide(); // Hide the bar if out of schedule time
+                    }
+                };
+
+                // Update the live time bar position every minute
+                setInterval(updateLiveTimeBar, 60000);
+                updateLiveTimeBar(); // Initial call to set the position
+            };
+
+            addScheduleTime();
+            addScheduleItems();
+
+            const debounce = (func, wait) => {
+                let timeout;
+                return function (...args) {
+                    const context = this;
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => func.apply(context, args), wait);
+                };
+            };
+
+            const updateWidthClass = debounce(() => {
+                addScheduleTime();
+            }, 250);
+
+            $(window).resize(updateWidthClass);
+            createLiveTimeBar();
+        });
+
+        // register.js tiếp tục
+        $(document).ready(function () {
+            // Function to open popup
+            function openPopup(content) {
+                $("#popup-container").html(content).fadeIn();
+            }
+
+            // Function to close popup
+            function closePopup() {
+                $("#popup-container").fadeOut().empty();
+            }
+
+            // Xử lý khi nhấp vào nút "Đăng ký học"
+            $(document).on("click", ".button-submit", function () {
+                openPopup($("#select-popup").html());
+            });
+
+            // Xử lý khi nhấp vào nút "Quay lại"
+            $(document).on("click", ".button-back", function () {
+                closePopup();
+            });
+
+            // Xử lý khi nhấp vào nút "Tiếp theo" trong select.html
+            $(document).on("click", "#close-popup", function () {
+                // Kiểm tra các trường chọn lựa
+                const select1Val = $("#select1-input").val().trim();
+                const select2Val = $("#select2-input").val().trim();
+                let isValid = true;
+
+                if (!select1.includes(select1Val)) {
+                    isValid = false;
+                    $("#select1-input").closest(".select-view").find(".text-red-500").removeClass("hidden").text("Chọn tùy chọn hợp lệ.");
+                    $("#select1-input").next(".focus-line").removeClass("bg-neutral").addClass("bg-red-500");
+                }
+
+                if (!select2.includes(select2Val)) {
+                    isValid = false;
+                    $("#select2-input").closest(".select-view").find(".text-red-500").removeClass("hidden").text("Chọn tùy chọn hợp lệ.");
+                    $("#select2-input").next(".focus-line").removeClass("bg-neutral").addClass("bg-red-500");
+                }
+
+                if (isValid) {
+                    // Mở submit popup
+                    openPopup($("#submit-popup").html());
+                }
+            });
+
+            // Xử lý khi nhấp vào nút "Xem sơ đồ"
+            $(document).on("click", ".button-map", function () {
+                window.open('map.html', '_blank'); // Thay thế bằng đường dẫn thực tế đến sơ đồ
+            });
+        });
+    </script>
+</body>
+</html>

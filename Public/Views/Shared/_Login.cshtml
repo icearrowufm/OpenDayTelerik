@@ -1,0 +1,108 @@
+﻿<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap"
+          rel="stylesheet" />
+    <link rel="stylesheet" href="~/Content/index.css" />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+            crossorigin="anonymous"></script>
+    <style>
+        .user-info {
+            position: fixed; /* Cố định vị trí */
+            bottom: 20px; /* Khoảng cách từ phía dưới */
+            right: 20px; /* Khoảng cách từ bên phải */
+            background-color: #fff; /* Nền trắng */
+            border: 1px solid #ccc; /* Đường viền xám */
+            border-radius: 4px; /* Bo góc */
+            padding: 10px 16px; /* Padding để tạo khoảng cách nội dung */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Bóng đổ nhẹ */
+            z-index: 1000; /* Đảm bảo hiển thị trên các thành phần khác */
+            font-size: 16px; /* Kích thước chữ */
+            color: #333; /* Màu chữ */
+            display: flex; /* Sử dụng flexbox để sắp xếp các phần tử trên cùng một dòng */
+            align-items: center; /* Canh giữa các phần tử theo chiều dọc */
+        }
+
+            .user-info img {
+                margin-left: 8px; /* Thêm khoảng cách giữa văn bản và hình ảnh */
+            }
+
+        .popup1 {
+            display: none; /* Ẩn popup theo mặc định */
+            position: fixed; /* Vị trí cố định */
+            left: 0;
+            top: 0;
+            width: 100%; /* Toàn bộ chiều rộng */
+            height: 100%; /* Toàn bộ chiều cao */
+            background-color: rgba(0, 0, 0, 0.5); /* Màu nền mờ */
+            justify-content: center; /* Canh giữa nội dung */
+            align-items: center; /* Canh giữa theo chiều dọc */
+        }
+
+        .popup-content1 {
+            background-color: white; /* Màu nền cho nội dung popup */
+            padding: 20px;
+            border-radius: 5px; /* Bo góc */
+            text-align: center; /* Canh giữa văn bản */
+        }
+
+        .close1 {
+            cursor: pointer; /* Hiển thị con trỏ chuột */
+            float: right; /* Đặt nút đóng ở góc phải */
+            font-size: 28px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+@if (Session["user"] != null)
+{
+    <div class="user-info" onclick="showPopup()">
+        Xin chào, @Session["user"] | <img src="~/Content/Image/qr-scan.png" />
+    </div>
+}
+else
+{
+    <div class="user-info">
+        Quét QRcode để đăng nhập
+    </div>
+}
+
+<div id="popup1" class="popup fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+    <div id="popup-content1" class="popup-content px-6 py-4 rounded-lg shadow-lg w-4/5 h-fit bg-neutral">
+        <span class="close1" onclick="closePopup()">&times;</span>
+        <p>User: @Session["user"]</p>
+        <p>Full Name: @Session["fullname"]</p>
+        @(Html.Kendo().QRCode()
+            .Name("qrcode")
+            .Value("https://openday.cloud/home/signin/" + Session["user"])
+            .Size(400)
+            .Border("#000", 1)) <br />
+    </div>
+</div>
+
+
+<script>
+    function showPopup() {
+        // Hiển thị popup và overlay
+                            $("#popup1").removeClass("hidden");
+                            $("#overlay").show();
+    }
+
+    function closePopup() {
+                            $("#popup1").addClass("hidden"); // Ẩn popup
+                            $("#overlay").hide(); // Ẩn overlay
+    }
+
+    // Thêm sự kiện nhấn phím để đóng popup
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") {
+            closePopup();
+        }
+    });
+</script>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/index.css" />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.min.js"
+      integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      tailwind.config = {
+        content: ["./**/*.html"],
+        theme: {
+          extend: {
+            colors: {
+              neutral: "#E1E1DE",
+              highlight: "#CEECF5",
+              secondary: "#FBAD22",
+              primary: "#242B68",
+              darkneutral: "#61646B",
+            },
+            gridTemplateRows: {
+              15: "repeat(15, minmax(0, 1fr))",
+              14: "repeat(14, minmax(0, 1fr))",
+            },
+            gridRow: {
+              "span-11": "span 11 / span 11",
+              "span-14": "span 14 / span 14",
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body>
+    <form class="flex flex-col gap-8 justify-center items-center h-screen">
+      <!-- Cau 1 -->
+      <div class="w-5/6">
+        <div class="select-view flex flex-col gap-1">
+          <div class="flex justify-between">
+            <input
+              type="text"
+              placeholder="Bạn là?*"
+              class="pl-2 outline-none w-full select-none pointer-events-none"
+              autocomplete="off"
+              required
+            />
+            <div class="">
+              <i data-lucide="chevron-down" class="size-5"></i>
+            </div>
+          </div>
+          <div class="focus-line h-0.5 bg-neutral"></div>
+        </div>
+        <div class="select-dropdown collapsible w-full h-fit">
+          <div
+            id="select1"
+            class="select-dropdown-list w-full text-primary bg-white py-2 mt-2 border-primary border"
+          ></div>
+        </div>
+      </div>
+      <!-- Cau 2 -->
+      <div class="flex flex-col gap-1 w-5/6">
+        <input
+          type="text"
+          placeholder="Họ và tên*"
+          class="pl-2 outline-none"
+          autocomplete="off"
+          required
+        />
+        <div class="focus-line h-0.5 bg-neutral"></div>
+        <div class="text-red-500 text-sm mt-1 hidden">
+          Trường này là bắt buộc.
+        </div>
+      </div>
+      <!-- Cau 3 -->
+      <div class="flex flex-col gap-1 w-5/6">
+        <input
+          type="email"
+          placeholder="Email*"
+          class="pl-2 outline-none"
+          autocomplete="off"
+          required
+        />
+        <div class="focus-line h-0.5 bg-neutral"></div>
+        <div class="text-red-500 text-sm mt-1 hidden">Email không hợp lệ.</div>
+      </div>
+      <!-- Cau 4 -->
+      <div class="flex flex-col gap-1 w-5/6">
+        <input
+          type="tel"
+          placeholder="Số điện thoại*"
+          class="pl-2 outline-none"
+          autocomplete="off"
+          required
+        />
+        <div class="focus-line h-0.5 bg-neutral"></div>
+        <div class="text-red-500 text-sm mt-1 hidden">
+          Số điện thoại không hợp lệ.
+        </div>
+      </div>
+      <!-- Cau 5 -->
+      <div class="flex flex-col gap-1 w-5/6">
+        <input
+          type="text"
+          placeholder="Lớp"
+          class="pl-2 outline-none"
+          autocomplete="off"
+        />
+        <div class="focus-line h-0.5 bg-neutral"></div>
+      </div>
+      <!-- Cau 6 -->
+      <div class="flex flex-col gap-1 w-5/6">
+        <input
+          type="text"
+          placeholder="Trường"
+          class="pl-2 outline-none w-full"
+          autocomplete="off"
+        />
+        <div class="focus-line h-0.5 bg-neutral"></div>
+      </div>
+      <!-- Cau 7 -->
+      <div class="w-5/6">
+        <div class="select-view flex flex-col gap-1">
+          <div class="flex justify-between">
+            <input
+              type="text"
+              placeholder="Tỉnh thành*"
+              class="pl-2 outline-none w-full pointer-events-none"
+              id="search-input"
+              autocomplete="off"
+              required
+            />
+            <div class="">
+              <i data-lucide="chevron-down" class="size-5"></i>
+            </div>
+          </div>
+          <div class="focus-line h-0.5 bg-neutral"></div>
+        </div>
+
+        <div class="select-dropdown collapsible w-full h-fit">
+          <div
+            id="select2"
+            class="select-dropdown-list max-h-[13.6rem] overflow-y-auto w-full text-primary bg-white py-2 mt-2 border-primary border"
+          ></div>
+        </div>
+      </div>
+      <button
+        type="submit"
+        class="bg-secondary text-primary font-bold px-4 py-2 text-xl"
+      >
+        Xác nhận
+      </button>
+    </form>
+    <!-- Script -->
+    <script type="module" src="/js/register.js"></script>
+    <script src="/js/icon.js"></script>
+    <script>
+      const form = document.querySelector("form");
+      form.addEventListener("submit", (event) => {
+        event.preventDefault(); // Prevent the default form submission
+        window.location.href = "../../page.html"; // Redirect to home.html
+      });
+    </script>
+  </body>
+</html>

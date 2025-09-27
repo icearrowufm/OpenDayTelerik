@@ -1,0 +1,41 @@
+﻿
+@{
+    ViewBag.Title = "SignIn";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script>
+    $(document).ready(function ()
+    {
+        // Kiểm tra nếu có thông báo từ ViewBag
+        var message = @Html.Raw(Json.Encode(ViewBag.Message));
+        if (message)
+        {
+                // Hiển thị thông báo bằng SweetAlert
+                swal({
+                    title: "Thông báo",
+                    text: message,
+                    icon: "success",
+                    buttons:
+                    {
+                        cancel: "Hủy",
+                        confirm:
+                        {
+                            text: "OK",
+                            value: true,
+                            visible: true,
+                            className: "btn-success",
+                            closeModal: true
+                        }
+                    }
+                }).then(() =>
+                {
+                     // Sử dụng setTimeout để chuyển hướng sau khi hiển thị thông báo
+                    setTimeout(function ()
+                    {
+                        window.location.href = '@Url.Action("Index", "Home")'; // Điều chỉnh Action và Controller theo nhu cầu
+                    }, 2000); // Thay đổi thời gian chờ nếu cần               
+                });
+            }
+        });
+</script>

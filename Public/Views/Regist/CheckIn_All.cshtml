@@ -1,0 +1,38 @@
+﻿@{
+    ViewBag.Title = "List_Checkin_All";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@Html.ActionLink("Quay lại", "Pivot_Class_CheckIn", "Regist", new { @class = "btn btn-primary" })
+@(Html.Kendo().Grid<OpenDayTelerik.Models.View_Checkin_Full>()
+    .Name("grid") // Tên của grid
+    .Columns(columns =>
+    {
+        columns.Bound(p => p.CLASS_ID).Title("Mã lớp");
+        columns.Bound(p => p.FULLNAME).Title("Tên lớp");
+        columns.Bound(p => p.TIMESTART).Title("Thời gian bắt đầu");
+        columns.Bound(p => p.ID).Title("User ID");
+        columns.Bound(p => p.FULLNAME).Title("Họ tên");
+        columns.Bound(p => p.STUDENT).Title("Đối tượng");
+        columns.Bound(p => p.CLASSNAME).Title("Lớp");
+        columns.Bound(p => p.SCHOOL).Title("Trường");
+        columns.Bound(p => p.PHONE).Title("SĐT");
+        columns.Bound(p => p.EMAIL).Title("Email");
+        columns.Bound(p => p.CITY).Title("Thành phố");
+    })
+.Groupable()
+.Sortable() // Thêm chức năng sắp xếp
+.Pageable()
+ .ToolBar(toolbar =>
+    {
+        toolbar.Excel();
+        })
+        .Excel(excel => excel
+        .FileName("Checkin_Full_Export.xlsx") // Tên file xuất
+        .Filterable(true) // Cho phép lọc
+        .ProxyURL(Url.Action("Excel_Export_Save", "Regist")) // Đường dẫn tới action xử lý lưu file
+        )
+        .DataSource(dataSource => dataSource
+        .Ajax()
+        .Read(read => read.Action("GetData_List_Checkin_Full", "Regist")) // Action trả về dữ liệu cho grid
+        )
+)

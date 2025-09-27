@@ -1,0 +1,35 @@
+﻿@model IEnumerable<OpenDayTelerik.Models.View_Regist_Full>
+
+@if (Model != null && Model.Any())
+{
+    <p>Tổng số: @Model.Count() / @Model.First().PAX</p>
+}
+else
+{
+    <p>Chưa có người đăng ký</p>
+}
+@Html.ActionLink("Quay lại", "Pivot_Class", "Regist", new { @class = "btn btn-primary" })
+
+@(Html.Kendo().Grid(Model)
+    .Name("grid") // Tên của grid
+    .Columns(columns =>
+    {
+        columns.Bound(p => p.USER_ID).Title("User ID");
+        columns.Bound(p => p.FULLNAME).Title("Full Name");
+
+        columns.Bound(p => p.CLASS_ID).Title("Class ID");
+        columns.Bound(p => p.CLASSNAME).Title("Class Name");
+        columns.Bound(p => p.GROUPCLASS).Title("Khung giờ");
+        columns.Bound(p => p.TYPE).Title("Nhóm");
+        columns.Bound(p => p.ROOM).Title("Phòng");
+        columns.Bound(p => p.TIMESTART).Title("Thời gian bắt đầu");
+        columns.Bound(p => p.TIMEEND).Title("Thời gian kết thúc");
+
+})
+.Groupable()
+.Sortable() // Thêm chức năng sắp xếp
+
+.Groupable() // Thêm chức năng nhóm
+
+)
+@Html.ActionLink("Quay lại", "Pivot_Class", "Regist", new { @class = "btn btn-primary" })

@@ -1,0 +1,57 @@
+﻿@model IEnumerable<OpenDayTelerik.Models.View_Regist_Full>
+
+@{
+    ViewBag.Title = "List_Regist_Class";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (Model != null && Model.Any())
+{
+    <div class="container">
+        <div class="row">
+            <p class="col-6 col-md-3">Tổng số: @Model.Count() / @Model.First().PAX</p>
+            <p class="col-6 col-md-3">Thời gian bắt đầu: @Model.First().TIMESTART</p>
+            <p class="col-6 col-md-3">Thời gian kết thúc: @Model.First().TIMEEND</p>
+            <p class="col-6 col-md-3">Class ID: @Model.First().CLASS_ID</p>
+            <p class="col-6 col-md-3">Class Name: @Model.First().CLASSNAME</p>
+            <p class="col-6 col-md-3">Phòng: @Model.First().ROOM</p>
+        </div>
+    </div>
+}
+else
+{
+    <p>Chưa có người đăng ký</p>
+}
+@Html.ActionLink("Quay lại", "Pivot_Class_Checkin", "Regist", new { @class = "btn btn-primary" })
+
+@(Html.Kendo().Grid<OpenDayTelerik.Models.View_Regist_Full>()
+    .Name("grid") // Tên của grid
+    .Columns(columns =>
+        {
+            columns.Bound(p => p.USER_ID).Title("User ID");
+            columns.Bound(p => p.FULLNAME).Title("Họ tên");
+            columns.Bound(p => p.STUDENT).Title("Đối tượng");
+            columns.Bound(p => p.CLASSNAME).Title("Lớp");
+            columns.Bound(p => p.SCHOOL).Title("Trường");
+            columns.Bound(p => p.PHONE).Title("SĐT");
+            columns.Bound(p => p.EMAIL).Title("Email");
+            columns.Bound(p => p.CITY).Title("Thành phố");
+
+        })
+    .Groupable()
+    .Sortable() // Thêm chức năng sắp xếp
+    .Groupable() // Thêm chức năng nhóm
+    .ToolBar(toolbar =>
+    {
+        toolbar.Excel();
+        })
+        .Excel(excel => excel
+        .FileName("Regist_Class_Export.xlsx") // Tên file xuất
+        .Filterable(true) // Cho phép lọc
+        .ProxyURL(Url.Action("Excel_Export_Save", "Regist")) // Đường dẫn tới action xử lý lưu file
+        )
+        .DataSource(dataSource => dataSource
+        .Ajax()
+        .Read(read => read.Action("GetData_List_Regist_Class", "Regist")) // Action trả về dữ liệu cho grid
+        )
+        )

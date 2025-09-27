@@ -1,0 +1,44 @@
+﻿@model IEnumerable<OpenDayTelerik.Models.View_Regist_Full>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@(Html.Kendo().Grid<OpenDayTelerik.Models.View_Regist_Full>()
+    .Name("grid") // Tên của grid
+    .Columns(columns =>
+    {
+
+        columns.Bound(p => p.CLASS_ID).Title("Class ID");
+        columns.Bound(p => p.CLASSNAME).Title("Class Name");
+        columns.Bound(p => p.GROUPCLASS).Title("Khung giờ");
+        columns.Bound(p => p.TYPE).Title("Nhóm");
+        columns.Bound(p => p.ROOM).Title("Phòng");
+        columns.Bound(p => p.TIMESTART).Title("Thời gian bắt đầu");
+        columns.Bound(p => p.TIMEEND).Title("Thời gian kết thúc");
+        columns.Bound(p => p.USER_ID).Title("User ID");
+        columns.Bound(p => p.FULLNAME).Title("Full Name");
+
+        // Thêm cột cho các hành động
+        //columns.Command(command =>
+        //{
+
+        //    command.Custom("Details").Text("Details").Click("onDetailsClick"); // Nút chi tiết
+
+        //}).Title("Actions").Width(100); // Đặt tiêu đề và chiều rộng cho cột hành động
+    })
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .Read(read => read.Action("Read", "Regist")) // Đường dẫn đến hành động Read
+        .Model(model =>
+        {
+            model.Id(p => p.USER_ID); // Chỉ định thuộc tính ID
+        })
+    )
+    .Groupable()
+    .Sortable() // Thêm chức năng sắp xếp
+                //  .Filterable() // Thêm chức năng lọc
+    .Groupable() // Thêm chức năng nhóm
+
+)

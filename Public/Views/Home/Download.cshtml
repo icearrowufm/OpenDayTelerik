@@ -1,0 +1,161 @@
+﻿@model IEnumerable<OpenDayTelerik.Models.View_Regist_Full>
+
+@{
+    ViewBag.Title = "Download";
+    Layout = null;
+}
+    <html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap"
+              rel="stylesheet" />
+        <link rel="stylesheet" href="~/Content/index.css" />
+        <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+                integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+                crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+        <script src="~/Scripts/html2canvas.min.js"></script>
+        <script>
+        tailwind.config = {
+            content: ["./**/*.html"],
+            theme: {
+                extend: {
+                    colors: {
+                        neutral: "#E1E1DE",
+                        highlight: "#CEECF5",
+                        secondary: "#FBAD22",
+                        primary: "#242B68",
+                        darkneutral: "#61646B",
+                    },
+                    gridTemplateRows: {
+                        15: "repeat(15, minmax(0, 1fr))",
+                        14: "repeat(14, minmax(0, 1fr))",
+                    },
+                    gridRow: {
+                        "span-11": "span 11 / span 11",
+                        "span-14": "span 14 / span 14",
+                    },
+                    fontFamily: {
+                        Halyard: ["Halyard", "EB Garamond", "serif"],
+                    },
+                },
+            },
+        };
+        </script>
+        <style>
+            .table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 2px solid #001a6e;
+    font-family: Arial, sans-serif;
+}
+
+.table th {
+    background-color: #FBAD22;
+    color: white;
+    padding: 8px;
+    text-align: left;
+     border: 1px solid #001a6e;
+      font-family: 'Halyard', 'EB Garamond', sans-serif;
+}
+
+.table td {
+    padding: 8px;
+    border: 1px solid #001a6e;
+     font-family: 'Halyard', 'EB Garamond', sans-serif;
+}
+
+.table tr:nth-child(even) {
+    background-color: #f2f2f2; /* Màu nền cho dòng chẵn */
+}
+
+.table tr:nth-child(odd) {
+    background-color: #ffffff; /* Màu nền cho dòng lẻ */
+}
+</style>
+    </head>
+    <body>
+        <div id="content" class="px-3">
+            <div class="h-18 w-full" style="padding-top:10px; padding-bottom:10px">
+                <img src="~/Content/Image/logo.png" width="150" alt="Fulbright's Open Day" />
+            </div>
+            <div class="w-full h-25 mb-4 border border-black rounded-md bg-container" style="background-color:#001a6e">
+                <center> <img src="~/Content/Image/bg.png" width="640" height="150" alt="Fulbright's Open Day"/></center>
+            </div>
+            <h1 class="text-2xl font-bold text-center mb-3 text-primary font-garamond">
+                Lịch trình cá nhân của<br /> @Model.FirstOrDefault().USER_ID - @Model.FirstOrDefault().FULLNAME.Trim()
+            </h1>
+
+            <table class="table justify-content-center justify-center">
+                <tr>
+                    <th>
+                        Từ
+                    </th>
+                    <th>
+                        Đến
+                    </th>
+                    <th>
+                        Hoạt động
+                    </th>
+
+                    <th>
+                        Chủ đề
+                    </th>
+                    <th>
+                        Phòng
+                    </th>
+
+                </tr>
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TIMESTART)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TIMEEND)
+                        </td>
+                        <td>
+                            @if (item.TYPE == 2)
+                            {<div>Học thử</div> }
+                            else
+                            { <div>Hội thảo</div>}
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CLASSNAME)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ROOM)
+                        </td>
+                    </tr>
+                }
+
+            </table>
+        </div>
+        <center>@*<button class="btn bg-primary text-white font-bold px-4 py-2 text-xl" style="margin-top: 20px;" onclick="downloadImage()">TẢI LỊCH TRÌNH</button>*@ <a href="/Home" alt="Quay lại"> <button class="btn bg-primary text-white font-bold px-4 py-2 text-xl" style="margin-top: 20px;">QUAY LẠI</button></a></center>
+        <script>
+            function downloadImage() {
+                const content = document.getElementById("content");
+
+                html2canvas(content).then(canvas => {
+                    // Chuyển canvas thành URL hình ảnh
+                    const image = canvas.toDataURL("image/png");
+                    canvas.toBlob(blob => {
+                    // Tạo một thẻ liên kết để tải hình ảnh
+                    const link = document.createElement("a");
+                    link.href = URL.createObjectURL(blob);
+                    link.download = "content.png";  // Tên của file ảnh khi tải xuống
+                    link.click();
+                    });
+                });
+            }
+        </script>
+    </body>
+    </html>

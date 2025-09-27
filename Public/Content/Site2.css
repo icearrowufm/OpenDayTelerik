@@ -1,0 +1,171 @@
+﻿
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin-bottom: 60px;
+    font-family: 'Roboto', sans-serif; /* Sử dụng font Roboto */
+}
+
+.disabled-input {
+    background-color: #eee; /* Màu nền khi bị vô hiệu hóa */
+    pointer-events: none; /* Ngăn chặn tương tác */
+}
+/* #region Footer styles */
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    font-size: 0.85em;
+    height: 60px;
+}
+/* #endregion */
+
+/* #region custom Kendo UI styles */
+h1 {
+    margin: 0;
+    font-size: 32px;
+    font-weight: lighter;
+    color: #fff;
+}
+
+h2 {
+    font-size: 30px;
+    font-weight: lighter;
+}
+
+.placeholders {
+    margin: 30px auto;
+}
+
+.placeholder img {
+    display: inline-block;
+}
+
+p .k-button {
+    margin: 0 15px 0 0;
+}
+
+#configure {
+    display: none;
+}
+
+p .k-button {
+    margin: 0 15px 0 0;
+}
+
+#responsive-panel {
+    padding: 0;
+}
+
+    #responsive-panel .k-menu {
+        padding: .5rem;
+    }
+/* #endregion */
+@media (max-width: 767px) {
+    #responsive-panel {
+        transition: all linear .2s;
+    }
+
+    #configure {
+        display: block;
+        float: right;
+    }
+
+    .k-rpanel {
+        padding: 0 1rem;
+    }
+
+    .k-rpanel-expanded {
+        padding: .5rem 1rem;
+    }
+
+    .navbar-header {
+        width: 100%;
+    }
+
+    .k-menu .k-item,
+    .k-menu .k-link {
+        width: 100%;
+    }
+
+    .k-menu .k-link {
+        box-sizing: border-box;
+    }
+
+    .k-rpanel-expanded ul {
+        flex-direction: column;
+    }
+}
+/* CSS cho form đăng ký tài khoản */
+.form-horizontal {
+    background-color: #f8f9fa; /* Màu nền nhẹ cho form */
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 600px; /* Đặt chiều rộng tối đa cho form */
+    margin: 20px auto; /* Căn giữa form */
+}
+
+/* Tiêu đề form */
+h2 {
+    color: #343a40; /* Màu tiêu đề chính */
+    margin-bottom: 20px; /* Khoảng cách dưới tiêu đề */
+}
+
+h4 {
+    color: #007bff; /* Màu tiêu đề phụ */
+}
+
+/* Các trường nhập liệu */
+.form-control {
+    border: 1px solid #ced4da; /* Đường viền cho trường nhập liệu */
+    border-radius: 4px; /* Bo tròn góc */
+    padding: 10px; /* Padding cho trường nhập liệu */
+    transition: border-color 0.2s; /* Hiệu ứng chuyển màu */
+}
+
+    .form-control:focus {
+        border-color: #007bff; /* Đổi màu viền khi trường được chọn */
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Hiệu ứng đổ bóng */
+    }
+
+/* Nút gửi */
+.btn-primary {
+    background-color: #007bff; /* Màu nền cho nút gửi */
+    border: none; /* Bỏ đường viền */
+    border-radius: 4px; /* Bo tròn góc nút */
+    padding: 10px 15px; /* Padding cho nút gửi */
+    color: white; /* Màu chữ cho nút gửi */
+    font-weight: bold; /* Chữ đậm */
+    transition: background-color 0.2s; /* Hiệu ứng chuyển màu */
+}
+
+    .btn-primary:hover {
+        background-color: #0056b3; /* Màu nền khi hover */
+    }
+
+/* Thông báo lỗi */
+.text-danger {
+    font-size: 0.875em; /* Kích thước chữ nhỏ hơn */
+    color: #dc3545; /* Màu đỏ cho thông báo lỗi */
+}
+
+/* Căn giữa các phần tử */
+.text-center {
+    text-align: center; /* Căn giữa nội dung */
+}
+
+/* Khoảng cách giữa các phần tử */
+.mb-4 {
+    margin-bottom: 1.5rem; /* Khoảng cách dưới */
+}
+
+/* Ẩn trường School và Class ban đầu */
+#schoolField, #classField {
+    display: block; /* Hiện thị mặc định */
+}
+
+

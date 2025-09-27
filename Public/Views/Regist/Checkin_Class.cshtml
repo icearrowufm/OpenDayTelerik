@@ -1,0 +1,133 @@
+﻿@model OpenDayTelerik.Models._CLASS
+
+@{
+    ViewBag.Title = "Checkin_Class";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<html>
+<head>
+    <title>Điểm danh hoạt động</title>
+    <script src="~/Scripts/html5-qrcode.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        @Html.ActionLink("Quay lại", "Pivot_Class_CheckIn", "Regist", new { @class = "btn btn-primary" })
+        <div class="row">
+            <h4 class="col-12 col-md-12">Check in lớp học @Model.CLASSNAME</h4>
+            <h5 class="col-12 col-md-6">Thời gian bắt đầu: @Model.TIMESTART.Trim()</h5> <h5 class="col-12 col-md-6"> Thời gian kết thúc: @Model.TIMEEND.Trim()</h5>
+            <h5 class="col-6 col-md-3">Phòng: @Model.ROOM.Trim()</h5>
+            <h5 class="col-6 col-md-3">Số lượng: <span id="soluong"></span>/@Model.PAX</h5>
+            <h5 class="col-12 col-md-6">Người điểm danh: @Session["user"] - @Session["fullname"]</h5>
+
+            <div id="div1" class="col-12 col-md-6">
+                <div id="qr-reader"></div>
+                <h4 id="qr-reader-results" class="text-center"></h4>
+                <h4 id="thongbao" class="text-center"></h4>
+                <audio id="myAudio">
+                    <source src="/Content/check.mp3" type="audio/mpeg">
+                    <source src="/Content/check.ogg" type="audio/ogg">
+                    Your browser does not support the audio element.
+                </audio>
+
+                <script>
+                    function docReady(fn) {
+                        // see if DOM is already available
+                        if (document.readyState === "complete" || document.readyState === "interactive") {
+                            // call on next available tick
+                            setTimeout(fn, 1);
+                        } else {
+                            document.addEventListener("DOMContentLoaded", fn);
+                        }
+                    }
+
+                    // Hàm JavaScript để phát âm thanh
+                    function playSound() {
+                        var audio = document.getElementById("myAudio");
+                        audio.play();
+                    }
+
+                    docReady(function () {
+                        var resultContainer = document.getElementById('qr-reader-results');
+                        var lastResult, countResults = 0;
+                        var isScanning = false;
+
+                        function onScanSuccess(decodedText, decodedResult) {
+                            if (decodedText !== lastResult) {
+
+                                ++countResults;
+                                lastResult = decodedText.split('/').pop();
+                                playSound();
+                                resultContainer.textContent = "Mã người dùng: " + lastResult;
+
+                                // Create a data object to send to the server
+                                var data = {
+                                    user: lastResult
+                                };
+
+                                // Send a POST request to the server to process the data
+                                fetch("/Regist/_Checkin_User/" + lastResult, {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/json"
+                                    },
+                                    body: JSON.stringify(data)
+                                })
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        // Hiển thị thông báo từ phản hồi JSON
+                                        const messageElement = document.getElementById('thongbao');
+                                        messageElement.textContent = data.message;
+                                        refreshGrid();
+
+                                    })
+                                    .catch(error => {
+                                        console.error("Lỗi khi gửi yêu cầu:", error);
+                                        const messageElement = document.getElementById('thongbao');
+                                        messageElement.textContent = "Có lỗi xảy ra, vui lòng thử lại.";
+                                    });
+                            }
+                        }
+                        function refreshGrid() {
+                            // Replace "grid" with the ID of your Kendo Grid
+                            var grid = $("#grid_class").data("kendoGrid");
+                            if (grid) {
+                                grid.dataSource.read().then(function () {
+                                    // Sau khi dữ liệu được tải lại, lấy tổng số lượng
+                                    var totalRecords = grid.dataSource.total();
+                                    // Cập nhật đối tượng có id #soluong
+                                    $("#soluong").text(totalRecords);
+                                }); // Re-fetch data
+                                grid.refresh(); // Refresh the UI
+                            }
+                        }
+
+                        var html5QrcodeScanner = new Html5QrcodeScanner(
+                            "qr-reader", { fps: 30, qrbox: 250 });
+                        html5QrcodeScanner.render(onScanSuccess);
+                    });
+                </script>
+            </div>
+            <div id="div2" class="col-12 col-md-6">
+                <center>
+                    @(Html.Kendo().Grid<OpenDayTelerik.Models.View_Checkin_Full>()
+                    .Name("grid_class") // Tên của grid
+                    .Columns(columns =>
+                    {
+                    columns.Bound(p => p.ID).Title("User ID");
+                    columns.Bound(p => p.FULLNAME).Title("Họ tên");
+                    })
+                   .DataSource(data => data.Ajax()
+                        .Read(read => read.Action("_binding_checkin_class", "Regist"))
+                    )
+
+                    )
+                </center>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

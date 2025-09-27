@@ -1,0 +1,107 @@
+﻿@model IEnumerable<OpenDayTelerik.Models.USER>
+
+@{
+    ViewBag.Title = "List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Danh sách người dùng</h2>
+
+<p>
+    @using (Html.BeginForm("Create", "User"))
+    {
+        <button type="submit" class="btn btn-primary">Thêm mới</button>
+    }
+    @*<button type="button" class="btn btn-success" onclick="downloadAllQRCodes()">Tải xuống tất cả QR Code</button>*@
+</p>
+
+<table class="table">
+    <tr>
+        <th>ID</th>
+        <th>HỌ TÊN</th>
+        <th>EMAIL</th>
+        <th>PHONE</th>
+        <th>ĐỐI TƯỢNG</th>
+        <th>TRƯỜNG</th>
+        <th>LỚP</th>
+        <th>THÀNH PHỐ</th>
+        <th>LINK</th>
+        <th>QR Code</th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@Html.DisplayFor(modelItem => item.ID)</td>
+            <td>@Html.DisplayFor(modelItem => item.FULLNAME)</td>
+            <td>@Html.DisplayFor(modelItem => item.EMAIL)</td>
+            <td>@Html.DisplayFor(modelItem => item.PHONE)</td>
+            <td>@Html.DisplayFor(modelItem => item.STUDENT)</td>
+            <td>@Html.DisplayFor(modelItem => item.SCHOOL)</td>
+            <td>@Html.DisplayFor(modelItem => item.CLASS)</td>
+            <td>@Html.DisplayFor(modelItem => item.CITY)</td>
+            <td><a href="https://openday.cloud/home/signin/@item.ID.ToString()">https://openday.cloud/home/signin/@item.ID.ToString()</a></td>
+            <td>
+                @(Html.Kendo().QRCode()
+                .Name("qrcode-" + item.ID.Trim())
+                .Value("https://openday.cloud/home/signin/" + item.ID.ToString())
+                .Size(300)
+                .Color("#000000")
+                )
+                |
+                <button type="submit" onclick="downloadQRCode('@item.ID.Trim()')" class="btn bg-primary" style="color:white">Download QR Code</button>
+            </td>
+        </tr>
+    }
+
+</table>
+
+@section Scripts {
+    <script>
+        function downloadQRCode(id) {
+            var qrCodeElement = $("#qrcode-" + id).data("kendoQRCode").wrapper[0];
+            html2canvas(qrCodeElement).then(function (canvas) {
+                var link = document.createElement('a');
+                link.download = id + '.png';
+                link.href = canvas.toDataURL("image/png");
+                link.click();
+            }).catch(function (error) {
+                console.error("Error generating canvas:", error);
+            });
+        }
+
+       function downloadAllQRCodes() {
+    const downloadPromises = [];
+    const qrCodes = $("tr").map(function () {
+        return $(this).find('td:first').text().trim(); // Lấy ID từ cột đầu tiên
+    }).get().filter(id => id); // Lọc ra các ID không rỗng
+
+    function downloadQRCodeById(id, index) {
+        setTimeout(() => {
+            const qrCodeElement = $("#qrcode-" + id).data("kendoQRCode").wrapper[0];
+
+            // Tạo promise cho từng mã QR
+            html2canvas(qrCodeElement).then(function (canvas) {
+                const link = document.createElement('a');
+                link.download = id + '.png'; // Đặt tên tệp
+                link.href = canvas.toDataURL("image/png");
+                document.body.appendChild(link); // Thêm link vào body để tải xuống
+                link.click(); // Tải xuống
+                document.body.removeChild(link); // Xóa link sau khi tải xuống
+            }).catch(function (error) {
+                console.error("Error generating canvas for ID:", id, error);
+            });
+        }, index * 500); // Delay 500ms giữa các lần tải xuống
+    }
+
+    qrCodes.forEach((id, index) => {
+        downloadQRCodeById(id, index);
+    });
+    
+    // Bạn có thể thêm thông báo hoàn thành ở đây nếu cần
+}
+
+
+    </script>
+}
